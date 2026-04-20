@@ -1,0 +1,16 @@
+{
+  "name": "inventory-demand",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev --workspace backend\" \"npm:dev --workspace frontend\"",
+    "build": "npm run build --workspace backend && npm run build --workspace frontend",
+    "lint": "npm run lint --workspace backend && npm run lint --workspace frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
