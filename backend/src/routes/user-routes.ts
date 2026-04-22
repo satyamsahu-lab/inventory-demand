@@ -15,3 +15,15 @@ userRouter.post("/", authJwt, rbacGuard("Users", "add"), (req, res, next) =>
 userRouter.put("/:id", authJwt, rbacGuard("Users", "edit"), (req, res, next) =>
   userController.update(req, res).catch(next),
 );
+userRouter.post(
+  "/bulk-status",
+  authJwt,
+  rbacGuard("Users", "edit"),
+  (req, res, next) => userController.bulkUpdateStatus(req, res).catch(next),
+);
+userRouter.get(
+  "/export/file",
+  authJwt,
+  rbacGuard("Users", "view"),
+  (req, res, next) => userController.export(req, res).catch(next),
+);

@@ -1,17 +1,34 @@
 import PDFDocument from 'pdfkit';
 
 export function csvFromRows(headers: string[], rows: Array<Record<string, any>>) {
+  const formatHeader = (h: string) => h.replace(/_/g, ' ').toUpperCase();
+  const formatValue = (v: any) => {
+    if (v instanceof Date) return formatDateDDMMYYYY(v);
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(v)) {
+      const d = new Date(v);
+      if (!isNaN(d.getTime())) return formatDateDDMMYYYY(d);
+    }
+    return v;
+  };
+
   const esc = (v: any) => {
-    const s = String(v ?? '');
+    const s = String(formatValue(v) ?? '');
     if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
     return s;
   };
 
-  const lines = [headers.join(',')];
+  const lines = [headers.map(formatHeader).join(',')];
   for (const row of rows) {
     lines.push(headers.map((h) => esc(row[h])).join(','));
   }
   return lines.join('\n');
+}
+
+function formatDateDDMMYYYY(date: Date) {
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
 }
 
 export async function pdfTableBuffer(title: string, headers: string[], rows: Array<Record<string, any>>) {
@@ -30,10 +47,20 @@ export async function pdfTableBuffer(title: string, headers: string[], rows: Arr
   const colWidth = pageWidth / headers.length;
   const rowHeight = 22;
 
+  const formatHeader = (h: string) => h.replace(/_/g, ' ').toUpperCase();
+  const formatValue = (v: any) => {
+    if (v instanceof Date) return formatDateDDMMYYYY(v);
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(v)) {
+      const d = new Date(v);
+      if (!isNaN(d.getTime())) return formatDateDDMMYYYY(d);
+    }
+    return v;
+  };
+
   // header
   doc.fontSize(10).fillColor('#111827');
   headers.forEach((h, idx) => {
-    doc.text(h, startX + idx * colWidth, y, { width: colWidth, align: 'left' });
+    doc.text(formatHeader(h), startX + idx * colWidth, y, { width: colWidth, align: 'left' });
   });
   y += rowHeight;
   doc.moveTo(startX, y - 6).lineTo(startX + pageWidth, y - 6).strokeColor('#E5E7EB').stroke();
@@ -45,7 +72,7 @@ export async function pdfTableBuffer(title: string, headers: string[], rows: Arr
       y = doc.page.margins.top;
     }
     headers.forEach((h, idx) => {
-      doc.text(String(r[h] ?? ''), startX + idx * colWidth, y, { width: colWidth, align: 'left' });
+      doc.text(String(formatValue(r[h]) ?? ''), startX + idx * colWidth, y, { width: colWidth, align: 'left' });
     });
     y += rowHeight;
   }

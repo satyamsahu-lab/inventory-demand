@@ -9,6 +9,7 @@ import { roleRepository } from "../repositories/role-repository.js";
 import { hashPassword } from "../shared/security/password.js";
 import { ForbiddenError } from "../shared/http/http-errors.js";
 import type { DbUser } from "../repositories/user-repository.js";
+import { csvFromRows, pdfTableBuffer } from "../shared/http/export.js";
 
 export class UserController {
   async list(req: Request, res: Response) {
@@ -28,6 +29,7 @@ export class UserController {
       email: u.email,
       role_id: u.role_id,
       role_name: u.role_name,
+      status: u.status,
       profile_image: u.profile_image,
       hobbies: u.hobbies,
       created_at: u.created_at,
@@ -53,6 +55,7 @@ export class UserController {
         email: z.string().email(),
         password: z.string().min(8),
         role_id: z.string().uuid(),
+        status: z.enum(["active", "inactive"]).optional(),
       })
       .parse(req.body);
 
@@ -74,6 +77,7 @@ export class UserController {
       password: passwordHash,
       role_id: body.role_id,
       created_by_admin_id: scopeAdminId,
+      status: body.status || "active",
     });
 
     if (!createdUser) {
@@ -88,6 +92,7 @@ export class UserController {
           email: createdUser.email,
           role_id: createdUser.role_id,
           role_name: createdUser.role_name,
+          status: createdUser.status,
           profile_image: createdUser.profile_image,
           hobbies: createdUser.hobbies,
           created_at: createdUser.created_at,
@@ -108,6 +113,7 @@ export class UserController {
         full_name: z.string().min(1),
         role_id: z.string().uuid(),
         password: z.string().min(8).optional(),
+        status: z.enum(["active", "inactive"]).optional(),
       })
       .parse(req.body);
 
@@ -127,6 +133,7 @@ export class UserController {
       full_name: body.full_name,
       role_id: body.role_id,
       password: passwordHash,
+      status: body.status,
     });
 
     if (!updated) {
@@ -142,6 +149,7 @@ export class UserController {
             email: updated.email,
             role_id: updated.role_id,
             role_name: updated.role_name,
+            status: updated.status,
             profile_image: updated.profile_image,
             hobbies: updated.hobbies,
             created_at: updated.created_at,
@@ -150,6 +158,78 @@ export class UserController {
         "Updated",
       ),
     );
+  }
+
+  async export(req: Request, res: Response) {
+    const scopeAdminId = getScopeAdminIdOrThrow(req);
+    if (req.user!.role.name === "User") {
+      throw new ForbiddenError();
+    }
+    const format = z.enum(["csv", "pdf"]).parse(req.query.format);
+
+    const exportScope = z
+      .enum(["selected", "page", "all"])
+      .default("all")
+      .parse(req.query.exportScope);
+
+    const idsRaw = req.query.ids;
+    const ids = z
+      .array(z.string().uuid())
+      .default([])
+      .parse(
+        typeof idsRaw === "string"
+          ? idsRaw
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : Array.isArray(idsRaw)
+            ? idsRaw
+            : [],
+      );
+
+    const result =
+      exportScope === "selected"
+        ? await userRepository.listByIds(scopeAdminId, ids)
+        : exportScope === "page"
+          ? await userRepository.list(
+              scopeAdminId,
+              listingQuerySchema.parse(req.query),
+            )
+          : await userRepository.list(
+              scopeAdminId,
+              listingQuerySchema.parse({ ...req.query, page: 1, limit: 10000 }),
+            );
+
+    const headers = ["full_name", "email", "role_name", "status", "created_at"];
+
+    if (format === "csv") {
+      const csv = csvFromRows(headers, result.records as any);
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", 'attachment; filename="users.csv"');
+      return res.send(csv);
+    }
+
+    const pdf = await pdfTableBuffer("Users", headers, result.records as any);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", 'attachment; filename="users.pdf"');
+    return res.send(pdf);
+  }
+
+  async bulkUpdateStatus(req: Request, res: Response) {
+    const scopeAdminId = getScopeAdminIdOrThrow(req);
+    const { ids, status } = z
+      .object({
+        ids: z.array(z.string().uuid()),
+        status: z.enum(["active", "inactive"]),
+      })
+      .parse(req.body);
+
+    const updated = await userRepository.updateStatus(
+      scopeAdminId,
+      ids,
+      status,
+    );
+    return res.json(ok({ count: updated.length }, "Status updated"));
   }
 }
 

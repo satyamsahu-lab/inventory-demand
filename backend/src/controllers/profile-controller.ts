@@ -1,16 +1,31 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
-import path from "node:path";
 
 import { ok } from "../shared/http/api-response.js";
 import { BadRequestError } from "../shared/http/http-errors.js";
 import { userRepository } from "../repositories/user-repository.js";
 import { env } from "../shared/env.js";
 
+function toAbsoluteUrl(maybePath: string | null) {
+  if (!maybePath) return null;
+  if (maybePath.startsWith("http://") || maybePath.startsWith("https://")) {
+    return maybePath;
+  }
+  const base = env.APP_URL.replace(/\/$/, "");
+  const p = maybePath.startsWith("/") ? maybePath : `/${maybePath}`;
+  return `${base}${p}`;
+}
+
 export class ProfileController {
   async get(req: Request, res: Response) {
     const user = await userRepository.getById(req.user!.id);
-    return res.json(ok({ record: user }));
+    const record = user
+      ? {
+          ...user,
+          profile_image: toAbsoluteUrl(user.profile_image),
+        }
+      : null;
+    return res.json(ok({ record }));
   }
 
   async update(req: Request, res: Response) {
@@ -51,7 +66,14 @@ export class ProfileController {
       profile_image: profileImage,
     });
 
-    return res.json(ok({ record }, "Updated"));
+    const normalized = record
+      ? {
+          ...record,
+          profile_image: toAbsoluteUrl(record.profile_image),
+        }
+      : null;
+
+    return res.json(ok({ record: normalized }, "Updated"));
   }
 }
 

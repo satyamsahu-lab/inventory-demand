@@ -48,3 +48,9 @@ inventoryRouter.get(
   rbacGuard("Inventory", "view"),
   (req, res, next) => inventoryController.lowStock(req, res).catch(next),
 );
+inventoryRouter.get(
+  "/export/file",
+  authJwt,
+  rbacGuard("Inventory", "view"),
+  (req, res, next) => inventoryController.export(req, res).catch(next),
+);

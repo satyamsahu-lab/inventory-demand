@@ -66,8 +66,38 @@ export class SalesController {
     const scopeAdminId = getScopeAdminIdOrThrow(req);
     const format = z.enum(["csv", "pdf"]).parse(req.query.format);
 
-    const q = listingQuerySchema.parse({ ...req.query, page: 1, limit: 100 });
-    const result = await salesRepository.list(scopeAdminId, q);
+    const exportScope = z
+      .enum(["selected", "page", "all"])
+      .default("all")
+      .parse(req.query.exportScope);
+
+    const idsRaw = req.query.ids;
+    const ids = z
+      .array(z.string().uuid())
+      .default([])
+      .parse(
+        typeof idsRaw === "string"
+          ? idsRaw
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : Array.isArray(idsRaw)
+            ? idsRaw
+            : [],
+      );
+
+    const result =
+      exportScope === "selected"
+        ? await salesRepository.listByIds(scopeAdminId, ids)
+        : exportScope === "page"
+          ? await salesRepository.list(
+              scopeAdminId,
+              listingQuerySchema.parse(req.query),
+            )
+          : await salesRepository.list(
+              scopeAdminId,
+              listingQuerySchema.parse({ ...req.query, page: 1, limit: 10000 }),
+            );
 
     const headers = ["product_name", "sku", "quantity_sold", "sale_date"];
 

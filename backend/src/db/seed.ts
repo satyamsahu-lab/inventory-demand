@@ -14,6 +14,7 @@ const MODULES = [
   "Products",
   "Inventory",
   "Sales",
+  "Categories",
 ] as const;
 const ACTIONS = ["view", "add", "edit", "delete"] as const;
 
@@ -84,6 +85,8 @@ async function seed() {
     );
 
     const superAdminUserId = userRows[0].id;
+    const adminRoleId = roles.get("Admin")!;
+    const userRoleId = roles.get("User")!;
 
     // Ensure created_by_admin_id for Super Admin is itself for scoping convenience
     await client.query(
@@ -91,9 +94,66 @@ async function seed() {
       [superAdminUserId],
     );
 
+    // Seed Admins (Multiple admins to test visibility)
+    const adminAPassword = await hashPassword("Admin@123");
+    const { rows: adminARows } = await client.query<{ id: string }>(
+      `INSERT INTO users (full_name, email, password, role_id, created_by_admin_id)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (email) DO UPDATE SET full_name = EXCLUDED.full_name
+       RETURNING id`,
+      [
+        "Admin A",
+        "admina@demo.com",
+        adminAPassword,
+        adminRoleId,
+        superAdminUserId,
+      ],
+    );
+    const adminAId = adminARows[0].id;
+
+    const adminBPassword = await hashPassword("Admin@123");
+    const { rows: adminBRows } = await client.query<{ id: string }>(
+      `INSERT INTO users (full_name, email, password, role_id, created_by_admin_id)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (email) DO UPDATE SET full_name = EXCLUDED.full_name
+       RETURNING id`,
+      [
+        "Admin B",
+        "adminb@demo.com",
+        adminBPassword,
+        adminRoleId,
+        superAdminUserId,
+      ],
+    );
+    const adminBId = adminBRows[0].id;
+
+    // Seed Products for Admin A
+    for (let i = 1; i <= 5; i++) {
+      const name = `Admin A Product ${i}`;
+      const sku = `A-PROD-${1000 + i}`;
+      const price = (Math.random() * 500 + 10).toFixed(2);
+      const minStock = Math.floor(Math.random() * 20) + 5;
+
+      await client.query(
+        "INSERT INTO products (name, sku, price, min_stock_threshold, created_by_admin_id) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (created_by_admin_id, sku) DO NOTHING",
+        [name, sku, price, minStock, adminAId],
+      );
+    }
+
+    // Seed Products for Admin B
+    for (let i = 1; i <= 5; i++) {
+      const name = `Admin B Product ${i}`;
+      const sku = `B-PROD-${1000 + i}`;
+      const price = (Math.random() * 500 + 10).toFixed(2);
+      const minStock = Math.floor(Math.random() * 20) + 5;
+
+      await client.query(
+        "INSERT INTO products (name, sku, price, min_stock_threshold, created_by_admin_id) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (created_by_admin_id, sku) DO NOTHING",
+        [name, sku, price, minStock, adminBId],
+      );
+    }
+
     // Seed Users (20 entries)
-    const adminRoleId = roles.get("Admin")!;
-    const userRoleId = roles.get("User")!;
     for (let i = 1; i <= 20; i++) {
       const name = `Demo User ${i}`;
       const email = `user${i}@demo.com`;

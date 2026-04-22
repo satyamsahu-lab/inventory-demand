@@ -8,6 +8,7 @@ export type DbUser = {
   password: string;
   role_id: string;
   role_name: "Super Admin" | "Admin" | "User";
+  status: string;
   created_by_admin_id: string | null;
   profile_image: string | null;
   hobbies: unknown;
@@ -103,13 +104,13 @@ class UserRepository {
     params.push(offset);
 
     const sql = `
-      SELECT u.id, u.full_name, u.email, u.role_id, r.name as role_name,
-             u.created_by_admin_id, u.profile_image, u.hobbies, u.created_at,
+      SELECT u.id, u.full_name, u.email, u.role_id, r.name as role_name, u.status,
+             u.created_by_admin_id, u.profile_image, u.hobbies, u.created_at, u.updated_at,
              u.password, u.password_reset_token_hash, u.password_reset_expires_at
       FROM users u
       JOIN roles r ON r.id = u.role_id
       WHERE ${where.join(" AND ")}
-      ORDER BY u.created_at DESC
+      ORDER BY u.updated_at DESC
       LIMIT $${params.length - 1} OFFSET $${params.length}
     `;
 
@@ -121,17 +122,40 @@ class UserRepository {
     };
   }
 
+  async listByIds(scopeAdminId: string, ids: string[]) {
+    if (ids.length === 0) {
+      return { records: [] as DbUser[], totalRecords: 0 };
+    }
+
+    // Prevent Admin from seeing Super Admin
+    const { rows } = await pool.query<DbUser>(
+      `SELECT u.id, u.full_name, u.email, u.role_id, r.name as role_name, u.status,
+             u.created_by_admin_id, u.profile_image, u.hobbies, u.created_at, u.updated_at,
+             u.password, u.password_reset_token_hash, u.password_reset_expires_at
+       FROM users u
+       JOIN roles r ON r.id = u.role_id
+       WHERE u.created_by_admin_id = $1
+         AND r.name <> $3
+         AND u.id = ANY($2::uuid[])
+       ORDER BY u.updated_at DESC`,
+      [scopeAdminId, ids, "Super Admin"],
+    );
+
+    return { records: rows, totalRecords: rows.length };
+  }
+
   async create(input: {
     full_name: string;
     email: string;
     password: string;
     role_id: string;
     created_by_admin_id: string;
+    status?: string;
   }) {
     const { rows } = await pool.query<DbUser>(
       `WITH ins AS (
-         INSERT INTO users (full_name, email, password, role_id, created_by_admin_id)
-         VALUES ($1, $2, $3, $4, $5)
+         INSERT INTO users (full_name, email, password, role_id, created_by_admin_id, status)
+         VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING *
        )
        SELECT ins.*, r.name as role_name
@@ -144,6 +168,7 @@ class UserRepository {
         input.password,
         input.role_id,
         input.created_by_admin_id,
+        input.status || "active",
       ],
     );
     return rows[0] ?? null;
@@ -152,13 +177,19 @@ class UserRepository {
   async updateAdminUser(
     scopeAdminId: string,
     userId: string,
-    input: { full_name: string; role_id: string; password?: string },
+    input: {
+      full_name: string;
+      role_id: string;
+      password?: string;
+      status?: string;
+    },
   ) {
     const params: any[] = [
       userId,
       scopeAdminId,
       input.full_name,
       input.role_id,
+      input.status || "active",
     ];
     const setPassword =
       typeof input.password === "string"
@@ -169,7 +200,9 @@ class UserRepository {
       `WITH upd AS (
          UPDATE users
          SET full_name = $3,
-             role_id = $4
+             role_id = $4,
+             status = $5,
+             updated_at = NOW()
              ${setPassword}
          WHERE id = $1
            AND created_by_admin_id = $2
@@ -213,6 +246,22 @@ class UserRepository {
       ],
     );
     return rows[0] ?? null;
+  }
+
+  async updateStatus(scopeAdminId: string, ids: string[], status: string) {
+    const { rows } = await pool.query<DbUser>(
+      `WITH upd AS (
+         UPDATE users
+         SET status = $2, updated_at = NOW()
+         WHERE created_by_admin_id = $1::uuid AND id = ANY($3::uuid[])
+         RETURNING *
+       )
+       SELECT upd.*, r.name as role_name
+       FROM upd
+       JOIN roles r ON r.id = upd.role_id`,
+      [scopeAdminId, status, ids],
+    );
+    return rows;
   }
 }
 

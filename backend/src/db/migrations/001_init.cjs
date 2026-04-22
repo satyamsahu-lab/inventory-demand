@@ -50,6 +50,8 @@ exports.up = (pgm) => {
       null: true,
     },
     profile_image: { type: "text", null: true },
+    profile_image_file_id: { type: "text", null: true },
+    profile_image_name: { type: "text", null: true },
     hobbies: { type: "jsonb", notNull: true, default: "[]" },
     password_reset_token_hash: { type: "text", null: true },
     password_reset_expires_at: { type: "timestamptz", null: true },
@@ -112,6 +114,9 @@ exports.up = (pgm) => {
     sku: { type: "varchar(100)", notNull: true },
     price: { type: "numeric(12,2)", notNull: true, default: 0 },
     min_stock_threshold: { type: "int", notNull: true, default: 0 },
+    image_url: { type: "text", null: true },
+    image_file_id: { type: "text", null: true },
+    image_name: { type: "text", null: true },
     created_at: {
       type: "timestamptz",
       notNull: true,

@@ -35,10 +35,11 @@ const envSchema = z.object({
   APP_URL: z.string().url(),
 
   SMTP_HOST: z.string().optional().or(z.literal("")),
-  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_PORT: z.coerce.number().default(465),
+  SMTP_SECURE: z.coerce.boolean().default(true),
   SMTP_USER: z.string().optional().or(z.literal("")),
   SMTP_PASS: z.string().optional().or(z.literal("")),
-  SMTP_FROM: z.string().default("no-reply@inventory-demand.local"),
+  SMTP_FROM: z.string().default("hbmean@gmail.com"),
 
   UPLOAD_DIR: z.string().default("uploads"),
 });

@@ -81,6 +81,29 @@ class SalesRepository {
     };
   }
 
+  async listByIds(scopeAdminId: string, ids: string[]) {
+    if (ids.length === 0) {
+      return { records: [] as SalesRow[], totalRecords: 0 };
+    }
+
+    const { rows } = await pool.query<SalesRow>(
+      `SELECT
+        s.id,
+        s.product_id,
+        p.name as product_name,
+        p.sku,
+        s.quantity_sold,
+        s.sale_date::text as sale_date
+       FROM sales s
+       JOIN products p ON p.id = s.product_id
+       WHERE s.created_by_admin_id = $1 AND s.id = ANY($2::uuid[])
+       ORDER BY s.sale_date DESC`,
+      [scopeAdminId, ids],
+    );
+
+    return { records: rows, totalRecords: rows.length };
+  }
+
   async create(scopeAdminId: string, input: SalesInput) {
     const { rows } = await pool.query<SalesRow>(
       `INSERT INTO sales (created_by_admin_id, product_id, quantity_sold, sale_date)

@@ -78,6 +78,30 @@ class InventoryRepository {
     };
   }
 
+  async listByIds(scopeAdminId: string, ids: string[]) {
+    if (ids.length === 0) {
+      return { records: [] as InventoryRow[], totalRecords: 0 };
+    }
+
+    const { rows } = await pool.query<InventoryRow>(
+      `SELECT
+        i.id,
+        i.product_id,
+        p.name as product_name,
+        p.sku,
+        i.quantity,
+        p.min_stock_threshold,
+        i.updated_at
+       FROM inventory i
+       JOIN products p ON p.id = i.product_id
+       WHERE i.created_by_admin_id = $1 AND i.id = ANY($2::uuid[])
+       ORDER BY i.updated_at DESC`,
+      [scopeAdminId, ids],
+    );
+
+    return { records: rows, totalRecords: rows.length };
+  }
+
   async upsert(scopeAdminId: string, productId: string, quantity: number) {
     const { rows } = await pool.query<InventoryRow>(
       `INSERT INTO inventory (created_by_admin_id, product_id, quantity)
