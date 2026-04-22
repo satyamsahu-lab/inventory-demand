@@ -20,6 +20,10 @@ publicRouter.get("/auth/user/profile", authJwt, (req, res, next) =>
   userAuthController.profile(req, res).catch(next),
 );
 
+publicRouter.post("/auth/user/logout", authJwt, (req, res, next) =>
+  userAuthController.logout(req, res).catch(next),
+);
+
 // Cart (Protected)
 publicRouter.get("/cart", authJwt, (req, res, next) =>
   cartController.getCart(req, res).catch(next),

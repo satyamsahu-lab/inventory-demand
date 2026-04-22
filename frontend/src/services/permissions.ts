@@ -1,12 +1,16 @@
 export type Permission = {
   module_name: string;
-  action: 'view' | 'add' | 'edit' | 'delete';
+  action: "view" | "add" | "edit" | "delete";
 };
 
 export function can(
   permissions: Permission[],
   moduleName: string,
-  action: Permission['action']
+  action: "view" | "add" | "edit" | "delete" | "view",
 ): boolean {
-  return permissions.some((p) => p.module_name === moduleName && p.action === action);
+  return permissions.some(
+    (p) =>
+      p.module_name === moduleName &&
+      (p.action === action || (p.action === "view" && action === "view")),
+  );
 }

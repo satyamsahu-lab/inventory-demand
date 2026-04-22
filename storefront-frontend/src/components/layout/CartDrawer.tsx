@@ -61,7 +61,7 @@ function ProductImageCarousel({ urls }: { urls: string[] }) {
           ))}
         </div>
       ) : (
-        <div className="h-full w-full grid place-items-center text-brand-600 bg-surface-50/50">
+        <div className="h-full w-full grid place-items-center text-[hsl(var(--primary))] bg-surface-50/50">
           <img
             src="https://placehold.co/400x400?text=No+Image"
             className="h-full w-full object-cover opacity-20"
@@ -288,7 +288,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </div>
               <button
                 onClick={onClose}
-                className="bg-[#6366f1] text-white px-8 py-3 rounded-2xl font-bold hover:bg-[#4f46e5] transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+                className="bg-[hsl(var(--primary))] text-white px-8 py-3 rounded-2xl font-bold hover:bg-[hsl(var(--primary)/0.9)] transition-all shadow-lg shadow-[hsl(var(--primary)/0.2)] active:scale-95"
               >
                 Start Shopping
               </button>
@@ -297,7 +297,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             items.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-3xl p-5 border border-slate-100 flex gap-5 group hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/5 transition-all"
+                className="bg-white rounded-3xl p-5 border border-slate-100 flex gap-5 group hover:border-[hsl(var(--primary)/0.1)] hover:shadow-xl hover:shadow-[hsl(var(--primary)/0.05)] transition-all"
               >
                 <div className="h-24 w-24 bg-slate-50 rounded-2xl overflow-hidden shrink-0 border border-slate-100 relative">
                   <ProductImageCarousel urls={item.image_urls || []} />
@@ -306,7 +306,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <div className="flex-1 flex flex-col justify-between py-1">
                   <div className="flex justify-between items-start gap-2">
                     <div>
-                      <h3 className="font-bold text-slate-900 text-[15px] leading-tight group-hover:text-[#6366f1] transition-colors">
+                      <h3 className="font-bold text-slate-900 text-[15px] leading-tight group-hover:text-[hsl(var(--primary))] transition-colors">
                         {item.product_name}
                       </h3>
                       <p className="text-[13px] font-bold text-slate-400 mt-1">
@@ -328,7 +328,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           updateQuantity(item.id, item.quantity - 1)
                         }
                         disabled={item.quantity <= 1}
-                        className="h-7 w-7 rounded-lg flex items-center justify-center text-slate-600 hover:bg-white hover:text-[#6366f1] disabled:opacity-30 transition-all shadow-sm active:scale-90"
+                        className="h-7 w-7 rounded-lg flex items-center justify-center text-slate-600 hover:bg-white hover:text-[hsl(var(--primary))] disabled:opacity-30 transition-all shadow-sm active:scale-90"
                       >
                         <Minus size={14} />
                       </button>
@@ -340,7 +340,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           updateQuantity(item.id, item.quantity + 1)
                         }
                         disabled={item.quantity >= item.stock_quantity}
-                        className="h-7 w-7 rounded-lg flex items-center justify-center text-slate-600 hover:bg-white hover:text-[#6366f1] disabled:opacity-30 transition-all shadow-sm active:scale-90"
+                        className="h-7 w-7 rounded-lg flex items-center justify-center text-slate-600 hover:bg-white hover:text-[hsl(var(--primary))] disabled:opacity-30 transition-all shadow-sm active:scale-90"
                       >
                         <Plus size={14} />
                       </button>
@@ -365,7 +365,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </div>
               <div className="flex justify-between items-end pt-2 border-t border-slate-100">
                 <span className="text-lg font-black text-slate-900">Total</span>
-                <span className="text-2xl font-black text-[#6366f1]">
+                <span className="text-2xl font-black text-[hsl(var(--primary))]">
                   ${subtotal.toFixed(2)}
                 </span>
               </div>
@@ -376,7 +376,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 onClose();
                 navigate("/checkout");
               }}
-              className="w-full bg-[#6366f1] text-white py-4 rounded-2xl text-[15px] font-black hover:bg-[#4f46e5] transition-all shadow-xl shadow-indigo-500/25 active:scale-[0.98] flex items-center justify-center gap-2"
+              className="w-full bg-[hsl(var(--primary))] text-white py-4 rounded-2xl text-[15px] font-black hover:bg-[hsl(var(--primary)/0.9)] transition-all shadow-xl shadow-[hsl(var(--primary)/0.25)] active:scale-[0.98] flex items-center justify-center gap-2"
             >
               Checkout
             </button>

@@ -36,7 +36,7 @@ export const SalesForm: React.FC<SalesFormProps> = ({
         </label>
         <div className="relative group">
           <Search
-            className="absolute left-4 top-4 text-surface-400 group-focus-within:text-brand-500 transition-colors"
+            className="absolute left-4 top-4 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors"
             size={18}
           />
           <input
@@ -44,7 +44,7 @@ export const SalesForm: React.FC<SalesFormProps> = ({
               "w-full bg-surface-50 border rounded-xl pl-11 pr-4 py-4 text-sm font-bold focus:outline-none transition-all",
               errors.productId
                 ? "border-rose-500 ring-4 ring-rose-500/10"
-                : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+                : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
             )}
             value={productQuery}
             placeholder="Search products by name or SKU..."
@@ -73,8 +73,8 @@ export const SalesForm: React.FC<SalesFormProps> = ({
                 className={cn(
                   "w-full text-left px-4 py-3 rounded-lg flex items-center justify-between transition-all",
                   productId === p.id
-                    ? "bg-brand-600 text-white shadow-md shadow-brand-500/20"
-                    : "bg-white hover:bg-brand-50 hover:text-brand-600",
+                    ? "bg-[hsl(var(--primary))] text-white shadow-md shadow-[hsl(var(--primary)/0.2)]"
+                    : "bg-white hover:bg-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))]",
                 )}
               >
                 <div>
@@ -90,7 +90,7 @@ export const SalesForm: React.FC<SalesFormProps> = ({
                     className={cn(
                       "text-[10px] font-bold uppercase tracking-wider",
                       productId === p.id
-                        ? "text-brand-100"
+                        ? "text-[hsl(var(--primary-foreground))]"
                         : "text-surface-400",
                     )}
                   >
@@ -114,7 +114,7 @@ export const SalesForm: React.FC<SalesFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-4 text-lg font-black focus:outline-none transition-all",
             errors.qty
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={qty}
           type="number"
@@ -133,7 +133,7 @@ export const SalesForm: React.FC<SalesFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-4 text-sm font-bold focus:outline-none transition-all",
             errors.date
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={date}
           onChange={(e) => setDate(e.target.value)}

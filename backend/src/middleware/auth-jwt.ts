@@ -1,13 +1,13 @@
-import type { NextFunction, Request, Response } from 'express';
-import { UnauthorizedError } from '../shared/http/http-errors.js';
-import { verifyJwt } from '../shared/security/jwt.js';
-import { userRepository } from '../repositories/user-repository.js';
+import type { NextFunction, Request, Response } from "express";
+import { UnauthorizedError } from "../shared/http/http-errors.js";
+import { verifyJwt } from "../shared/security/jwt.js";
+import { userRepository } from "../repositories/user-repository.js";
 
 export type RequestUser = {
   id: string;
   fullName: string;
   email: string;
-  role: { id: string; name: 'Super Admin' | 'Admin' | 'User' };
+  role: { id: string; name: "Super Admin" | "Admin" | "User" };
   createdByAdminId: string | null;
 };
 
@@ -16,19 +16,27 @@ declare global {
   var __requestUser: undefined;
 }
 
-declare module 'express-serve-static-core' {
+declare module "express-serve-static-core" {
   interface Request {
     user?: RequestUser;
   }
 }
 
-export async function authJwt(req: Request, _res: Response, next: NextFunction) {
-  const authHeader = req.header('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
+export async function authJwt(
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) {
+  const authHeader = req.header("authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
     return next(new UnauthorizedError());
   }
 
-  const token = authHeader.slice('Bearer '.length).trim();
+  const token = authHeader.slice("Bearer ".length).trim();
+  if (!token) {
+    return next(new UnauthorizedError());
+  }
+
   try {
     const payload = verifyJwt(token);
     const user = await userRepository.getById(payload.sub);
@@ -41,7 +49,7 @@ export async function authJwt(req: Request, _res: Response, next: NextFunction) 
       fullName: user.full_name,
       email: user.email,
       role: { id: user.role_id, name: user.role_name },
-      createdByAdminId: user.created_by_admin_id
+      createdByAdminId: user.created_by_admin_id,
     };
 
     return next();

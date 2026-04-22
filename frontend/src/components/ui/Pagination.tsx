@@ -61,8 +61,8 @@ export function Pagination(props: {
               className={
                 "h-8 w-8 rounded border text-sm " +
                 (p === props.page
-                  ? "border-indigo-600 bg-indigo-600 text-white"
-                  : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50")
+                  ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-white shadow-lg shadow-[hsl(var(--primary)/0.2)] scale-110 z-10"
+                  : "border-surface-200 bg-white text-surface-700 hover:border-[hsl(var(--primary)/0.3)] hover:text-[hsl(var(--primary))]")
               }
               onClick={() => props.onPageChange(p)}
             >

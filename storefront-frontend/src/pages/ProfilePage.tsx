@@ -142,7 +142,7 @@ export function ProfilePage() {
                     document.getElementById("avatar-upload")?.click()
                   }
                 >
-                  <Camera size={18} className="text-brand-600" />
+                  <Camera size={18} className="text-[hsl(var(--primary))]" />
                   <span>Change Photo</span>
                 </Button>
                 <p className="text-[10px] text-surface-400 text-center font-bold uppercase tracking-widest mt-3">
@@ -156,7 +156,7 @@ export function ProfilePage() {
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 px-1 mb-1">
-                  <Mail size={12} className="text-brand-600" />
+                  <Mail size={12} className="text-[hsl(var(--primary))]" />
                   <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">
                     Account Email
                   </label>
@@ -170,7 +170,7 @@ export function ProfilePage() {
 
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 px-1 mb-1">
-                  <User size={12} className="text-brand-600" />
+                  <User size={12} className="text-[hsl(var(--primary))]" />
                   <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">
                     Display Name
                   </label>
@@ -180,7 +180,7 @@ export function ProfilePage() {
                     "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
                     errors.fullName
                       ? "border-rose-500 ring-4 ring-rose-500/10"
-                      : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+                      : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
                   )}
                   value={fullName}
                   placeholder="Enter your full name"
@@ -191,7 +191,7 @@ export function ProfilePage() {
 
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 px-1 mb-1">
-                  <Heart size={12} className="text-brand-600" />
+                  <Heart size={12} className="text-[hsl(var(--primary))]" />
                   <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">
                     Your Hobbies
                   </label>
@@ -207,14 +207,14 @@ export function ProfilePage() {
                         className={cn(
                           "px-4 py-3 rounded-2xl text-xs font-bold border transition-all duration-300 text-left relative overflow-hidden group",
                           isSelected
-                            ? "bg-brand-50 border-brand-200 text-brand-700 shadow-sm"
-                            : "bg-white border-surface-100 text-surface-500 hover:border-brand-100 hover:text-brand-600 hover:bg-surface-50",
+                            ? "bg-[hsl(var(--secondary))] border-[hsl(var(--primary)/0.2)] text-[hsl(var(--primary))] shadow-sm"
+                            : "bg-white border-surface-100 text-surface-500 hover:border-[hsl(var(--primary)/0.1)] hover:text-[hsl(var(--primary))] hover:bg-surface-50",
                         )}
                       >
                         <div className="flex items-center justify-between relative z-10">
                           {h}
                           {isSelected && (
-                            <div className="h-1.5 w-1.5 rounded-full bg-brand-600 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
+                            <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--primary))] shadow-[0_0_8px_rgba(var(--primary),0.6)]" />
                           )}
                         </div>
                       </button>
@@ -226,7 +226,7 @@ export function ProfilePage() {
 
             <div className="pt-6 border-t border-surface-100 flex justify-end">
               <Button
-                className="h-12 px-10 shadow-brand-200"
+                className="h-12 px-10 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
                 onClick={() =>
                   onSave().catch((e) =>
                     toast.error(

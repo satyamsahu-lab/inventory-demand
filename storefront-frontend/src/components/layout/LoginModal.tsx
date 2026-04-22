@@ -104,7 +104,7 @@ export function LoginModal({
               className={cn(
                 "flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
                 isLogin
-                  ? "bg-white text-brand-600 shadow-sm"
+                  ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                   : "text-surface-500 hover:text-surface-700",
               )}
             >
@@ -115,7 +115,7 @@ export function LoginModal({
               className={cn(
                 "flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
                 !isLogin
-                  ? "bg-white text-brand-600 shadow-sm"
+                  ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                   : "text-surface-500 hover:text-surface-700",
               )}
             >
@@ -127,7 +127,7 @@ export function LoginModal({
             {!isLogin && (
               <div className="relative group">
                 <User
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-brand-600 transition-colors"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors"
                   size={18}
                 />
                 <input
@@ -138,14 +138,14 @@ export function LoginModal({
                   onChange={(e) =>
                     setFormData({ ...formData, fullName: e.target.value })
                   }
-                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all"
+                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all"
                 />
               </div>
             )}
 
             <div className="relative group">
               <Mail
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-brand-600 transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors"
                 size={18}
               />
               <input
@@ -156,13 +156,13 @@ export function LoginModal({
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full bg-surface-50 border-none rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all"
+                className="w-full bg-surface-50 border-none rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all"
               />
             </div>
 
             <div className="relative group">
               <Lock
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-brand-600 transition-colors z-10"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors z-10"
                 size={18}
               />
               <PasswordInput
@@ -178,7 +178,7 @@ export function LoginModal({
             {!isLogin && (
               <div className="relative group">
                 <Lock
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-brand-600 transition-colors z-10"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors z-10"
                   size={18}
                 />
                 <PasswordInput
@@ -198,7 +198,7 @@ export function LoginModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-surface-900 text-white py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] hover:bg-brand-600 transition-all shadow-xl shadow-surface-900/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 group"
+              className="w-full bg-surface-900 text-white py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] hover:bg-[hsl(var(--primary))] transition-all shadow-xl shadow-surface-900/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 group"
             >
               {loading ? (
                 "Processing..."
@@ -216,7 +216,7 @@ export function LoginModal({
 
           {isLogin && (
             <div className="mt-6 text-center">
-              <button className="text-[10px] font-black uppercase tracking-widest text-surface-400 hover:text-brand-600 transition-colors">
+              <button className="text-[10px] font-black uppercase tracking-widest text-surface-400 hover:text-[hsl(var(--primary))] transition-colors">
                 Forgot Password?
               </button>
             </div>

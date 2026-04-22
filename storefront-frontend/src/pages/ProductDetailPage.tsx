@@ -9,6 +9,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { publicApi } from "../services/public-api";
+import { auditLogService } from "../services/audit-log";
 import { useUserAuth } from "../store/user-auth";
 import { cn } from "../utils/cn";
 import toast from "react-hot-toast";
@@ -56,7 +57,7 @@ function ProductImageCarousel({ urls }: { urls: string[] }) {
           ))}
         </div>
       ) : (
-        <div className="h-full w-full grid place-items-center text-brand-600 bg-surface-50/50">
+        <div className="h-full w-full grid place-items-center text-[hsl(var(--primary))] bg-surface-50/50">
           <img
             src="https://placehold.co/400x400?text=No+Image"
             className="h-full w-full object-cover opacity-20"
@@ -127,6 +128,14 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
         const { data } = await publicApi.get(`/public/products/${id}`);
         setProduct(data.data.record);
         setActiveImage(data.data.record.image_urls[0] || "");
+
+        // Log view activity
+        await auditLogService.logFrontendActivity({
+          action: "view",
+          module: "PRODUCTS",
+          description: `User viewed product (${data.data.record.name})`,
+          metadata: { productId: id },
+        });
       } catch (err) {
         toast.error("Failed to load product");
       } finally {
@@ -162,7 +171,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
       <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <Link
           to="/shop"
-          className="inline-flex items-center gap-2 text-slate-400 hover:text-[#6366f1] transition-colors text-[13px] font-bold group"
+          className="inline-flex items-center gap-2 text-slate-400 hover:text-[hsl(var(--primary))] transition-colors text-[13px] font-bold group"
         >
           <ArrowLeft
             size={16}
@@ -189,7 +198,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
                     className={cn(
                       "aspect-square bg-slate-50 rounded-2xl overflow-hidden cursor-pointer transition-all p-2 flex items-center justify-center border-2",
                       activeImage === url
-                        ? "border-[#6366f1] bg-indigo-50/50"
+                        ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary)/0.5)]"
                         : "border-transparent hover:border-slate-200",
                     )}
                   >
@@ -208,7 +217,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
           <div className="space-y-10">
             <div className="space-y-6">
               <div className="flex items-center gap-4">
-                <span className="bg-indigo-50 text-[#6366f1] text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                <span className="bg-[hsl(var(--secondary))] text-[hsl(var(--primary))] text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
                   {product.category_name}
                 </span>
                 <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider">
@@ -219,7 +228,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
                 {product.name}
               </h1>
               <div className="flex items-center gap-4">
-                <p className="text-4xl font-bold text-[#6366f1]">
+                <p className="text-4xl font-bold text-[hsl(var(--primary))]">
                   ${product.price}
                 </p>
                 <div className="h-6 w-px bg-slate-200 mx-2" />
@@ -227,7 +236,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
                   <span className="text-[13px] font-bold text-slate-900">
                     4.9
                   </span>
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#6366f1]" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--primary))]" />
                   <span className="text-[13px] font-bold text-slate-400 uppercase tracking-tight">
                     Rating
                   </span>
@@ -245,7 +254,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
                 <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-full border border-slate-100">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="h-11 w-11 rounded-full bg-white flex items-center justify-center text-slate-600 hover:text-[#6366f1] shadow-sm active:scale-95 transition-all font-bold"
+                    className="h-11 w-11 rounded-full bg-white flex items-center justify-center text-slate-600 hover:text-[hsl(var(--primary))] shadow-sm active:scale-95 transition-all font-bold"
                   >
                     -
                   </button>
@@ -258,7 +267,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
                         Math.min(product.stock_quantity, quantity + 1),
                       )
                     }
-                    className="h-11 w-11 rounded-full bg-white flex items-center justify-center text-slate-600 hover:text-[#6366f1] shadow-sm active:scale-95 transition-all font-bold"
+                    className="h-11 w-11 rounded-full bg-white flex items-center justify-center text-slate-600 hover:text-[hsl(var(--primary))] shadow-sm active:scale-95 transition-all font-bold"
                   >
                     +
                   </button>
@@ -280,7 +289,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
                   "w-full py-5 rounded-full text-[15px] font-bold transition-all active:scale-[0.98] flex items-center justify-center gap-3 shadow-xl",
                   product.stock_quantity === 0
                     ? "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none"
-                    : "bg-[#6366f1] text-white hover:bg-[#4f46e5] shadow-indigo-500/25",
+                    : "bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary)/0.9)] shadow-[hsl(var(--primary)/0.25)]",
                 )}
               >
                 <ShoppingCart size={20} strokeWidth={2.5} />
@@ -293,7 +302,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
             {/* Features */}
             <div className="grid grid-cols-3 gap-6 pt-10 border-t border-slate-100">
               <div className="flex flex-col items-center text-center space-y-3">
-                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[#6366f1]">
+                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[hsl(var(--primary))]">
                   <Truck size={24} />
                 </div>
                 <p className="text-[11px] font-bold uppercase tracking-widest text-slate-900">
@@ -301,7 +310,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
                 </p>
               </div>
               <div className="flex flex-col items-center text-center space-y-3">
-                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[#6366f1]">
+                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[hsl(var(--primary))]">
                   <ShieldCheck size={24} />
                 </div>
                 <p className="text-[11px] font-bold uppercase tracking-widest text-slate-900">
@@ -309,7 +318,7 @@ export function ProductDetailPage({ onOpenCart }: { onOpenCart?: () => void }) {
                 </p>
               </div>
               <div className="flex flex-col items-center text-center space-y-3">
-                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[#6366f1]">
+                <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[hsl(var(--primary))]">
                   <RotateCcw size={24} />
                 </div>
                 <p className="text-[11px] font-bold uppercase tracking-widest text-slate-900">

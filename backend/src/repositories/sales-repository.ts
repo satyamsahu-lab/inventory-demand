@@ -17,7 +17,10 @@ export type SalesInput = {
 };
 
 class SalesRepository {
-  async list(scopeAdminId: string, q: ListingQuery) {
+  async list(
+    scopeAdminId: string,
+    q: ListingQuery & { startDate?: string; endDate?: string },
+  ) {
     const page = q.page;
     const limit = q.limit;
     const offset = (page - 1) * limit;
@@ -30,6 +33,13 @@ class SalesRepository {
       where.push(
         `(p.name ILIKE $${params.length} OR p.sku ILIKE $${params.length})`,
       );
+    }
+
+    if (q.startDate && q.endDate) {
+      params.push(q.startDate);
+      where.push(`s.sale_date >= $${params.length}`);
+      params.push(q.endDate);
+      where.push(`s.sale_date <= $${params.length}`);
     }
 
     let orderBy = "sale_date";

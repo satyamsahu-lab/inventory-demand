@@ -123,7 +123,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
             errors.name
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={name}
           placeholder="e.g. Premium Wireless Headphones"
@@ -144,7 +144,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium font-mono",
             errors.sku
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={sku}
           placeholder="SKU-001"
@@ -166,7 +166,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium min-h-[100px] resize-none",
             errors.description
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={description}
           placeholder="Detailed description of the product..."
@@ -187,7 +187,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
             errors.price
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           type="number"
           value={price}
@@ -210,7 +210,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
               errors.minStock
                 ? "border-rose-500 ring-4 ring-rose-500/10"
-                : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+                : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
             )}
             type="number"
             value={minStock}
@@ -237,7 +237,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
             errors.category_id
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
@@ -267,7 +267,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             !categoryId ? "opacity-50 cursor-not-allowed" : "",
             errors.subcategory_id
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={subcategoryId}
           onChange={(e) => setSubcategoryId(e.target.value)}
@@ -295,9 +295,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   name="product-status"
                   checked={status === "active"}
                   onChange={() => setStatus("active")}
-                  className="peer appearance-none w-5 h-5 border-2 border-surface-200 rounded-full checked:border-brand-500 transition-all cursor-pointer"
+                  className="peer appearance-none w-5 h-5 border-2 border-surface-200 rounded-full checked:border-[hsl(var(--primary))] transition-all cursor-pointer"
                 />
-                <div className="absolute w-2.5 h-2.5 rounded-full bg-brand-500 scale-0 peer-checked:scale-100 transition-transform" />
+                <div className="absolute w-2.5 h-2.5 rounded-full bg-[hsl(var(--primary))] scale-0 peer-checked:scale-100 transition-transform" />
               </div>
               <span className="text-sm font-medium text-surface-600 group-hover:text-surface-900 transition-colors">
                 Active
@@ -350,7 +350,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             onClick={() =>
               document.getElementById("product-image-upload")?.click()
             }
-            className="h-20 w-full rounded-2xl border-2 border-dashed border-surface-200 flex flex-col items-center justify-center gap-1.5 text-surface-400 hover:border-brand-400 hover:text-brand-600 hover:bg-brand-50/20 transition-all group"
+            className="h-20 w-full rounded-2xl border-2 border-dashed border-surface-200 flex flex-col items-center justify-center gap-1.5 text-surface-400 hover:border-[hsl(var(--primary)/0.4)] hover:text-[hsl(var(--primary))] hover:bg-[hsl(var(--secondary)/0.2)] transition-all group"
           >
             <Upload
               size={18}
@@ -389,14 +389,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               {imagePreviewUrls.map((u, idx) => (
                 <div
                   key={u}
-                  className="relative group h-20 w-20 rounded-2xl overflow-hidden border-2 border-brand-200 border-dashed bg-brand-50/20 shadow-sm transition-all hover:border-brand-400 hover:shadow-md"
+                  className="relative group h-20 w-20 rounded-2xl overflow-hidden border-2 border-[hsl(var(--primary)/0.2)] border-dashed bg-[hsl(var(--secondary)/0.2)] shadow-sm transition-all hover:border-[hsl(var(--primary)/0.4)] hover:shadow-md"
                 >
                   <img
                     src={u}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     alt="New image preview"
                   />
-                  <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-brand-500 text-[8px] font-black text-white uppercase tracking-wider shadow-sm">
+                  <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-[hsl(var(--primary))] text-[8px] font-black text-white uppercase tracking-wider shadow-sm">
                     New
                   </div>
                   <button

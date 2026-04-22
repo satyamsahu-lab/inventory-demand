@@ -60,7 +60,7 @@ function ProductImageCarousel({ urls }: { urls: string[] }) {
             ))}
           </div>
         ) : (
-          <div className="h-full w-full grid place-items-center text-brand-600 bg-surface-50/50">
+          <div className="h-full w-full grid place-items-center text-[hsl(var(--primary))] bg-surface-50/50">
             <img
               src="https://placehold.co/400x400?text=No+Image"
               className="h-full w-full object-cover opacity-20"
@@ -237,21 +237,23 @@ export function ShopPage({ onOpenCart }: { onOpenCart?: () => void }) {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-[#F9F9FF] pt-10 pb-10">
         {/* Background Decorative Blobs */}
-        <div className="absolute top-[-10%] left-[-5%] w-[40%] aspect-square bg-indigo-500/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-5%] w-[40%] aspect-square bg-purple-500/5 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-5%] w-[40%] aspect-square bg-[hsl(var(--primary)/0.05)] rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[40%] aspect-square bg-[hsl(var(--accent)/0.05)] rounded-full blur-[120px]" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-indigo-100 mb-8">
-              <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
-              <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-[hsl(var(--primary)/0.1)] mb-8">
+              <span className="flex h-2 w-2 rounded-full bg-[hsl(var(--primary))] animate-pulse" />
+              <span className="text-[11px] font-bold text-[hsl(var(--primary))] uppercase tracking-wider">
                 New Spring Drop · Up to 50% off
               </span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-[1.1] mb-8">
               Shop the future of <br />
-              <span className="text-[#6366f1]">premium quality.</span>
+              <span className="text-[hsl(var(--primary))]">
+                premium quality.
+              </span>
             </h1>
 
             <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl mb-12">
@@ -265,7 +267,7 @@ export function ShopPage({ onOpenCart }: { onOpenCart?: () => void }) {
                   const el = document.getElementById("products");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="bg-[#6366f1] text-white px-8 py-4 rounded-full font-bold text-[15px] hover:bg-[#4f46e5] transition-all shadow-xl shadow-indigo-500/25 flex items-center gap-2 group"
+                className="bg-[hsl(var(--primary))] text-white px-8 py-4 rounded-full font-bold text-[15px] hover:bg-[hsl(var(--primary)/0.9)] transition-all shadow-xl shadow-[hsl(var(--primary)/0.2)] flex items-center gap-2 group"
               >
                 Browse Collection
                 <ChevronRight
@@ -324,8 +326,8 @@ export function ShopPage({ onOpenCart }: { onOpenCart?: () => void }) {
             className={cn(
               "px-6 py-2.5 rounded-full text-[13px] font-bold transition-all",
               !activeCategory
-                ? "bg-[#6366f1] text-white shadow-lg shadow-indigo-500/20"
-                : "bg-slate-50 text-slate-600 hover:bg-slate-100",
+                ? "bg-[hsl(var(--primary))] text-white shadow-lg shadow-[hsl(var(--primary)/0.2)]"
+                : "bg-surface-50 text-slate-600 hover:bg-slate-100",
             )}
           >
             All Products
@@ -340,8 +342,8 @@ export function ShopPage({ onOpenCart }: { onOpenCart?: () => void }) {
               className={cn(
                 "px-6 py-2.5 rounded-full text-[13px] font-bold transition-all",
                 activeCategory === cat.id
-                  ? "bg-[#6366f1] text-white shadow-lg shadow-indigo-500/20"
-                  : "bg-slate-50 text-slate-600 hover:bg-slate-100",
+                  ? "bg-[hsl(var(--primary))] text-white shadow-lg shadow-[hsl(var(--primary)/0.2)]"
+                  : "bg-surface-50 text-slate-600 hover:bg-slate-100",
               )}
             >
               {cat.name}
@@ -372,7 +374,7 @@ export function ShopPage({ onOpenCart }: { onOpenCart?: () => void }) {
                   <div
                     key={`${product.id}-${index}`}
                     ref={isLast ? lastProductElementRef : null}
-                    className="group bg-[#f8f9ff] rounded-[2rem] p-6 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/5 flex flex-col relative"
+                    className="group bg-white rounded-[2rem] p-6 transition-all duration-500 hover:shadow-2xl hover:shadow-[hsl(var(--primary)/0.05)] flex flex-col relative"
                   >
                     {/* Badge */}
                     <div className="absolute top-6 left-6 z-10 flex flex-col gap-2">
@@ -417,7 +419,7 @@ export function ShopPage({ onOpenCart }: { onOpenCart?: () => void }) {
                         </span>
                       </div>
                       <Link to={`/product/${product.id}`} className="block">
-                        <h3 className="font-bold text-slate-900 text-lg group-hover:text-[#6366f1] transition-colors leading-tight">
+                        <h3 className="font-bold text-slate-900 text-lg group-hover:text-[hsl(var(--primary))] transition-colors leading-tight">
                           {product.name}
                         </h3>
                       </Link>
@@ -443,7 +445,7 @@ export function ShopPage({ onOpenCart }: { onOpenCart?: () => void }) {
                           "h-11 w-11 rounded-full flex items-center justify-center transition-all active:scale-90 shadow-lg",
                           product.stock_quantity === 0
                             ? "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none"
-                            : "bg-[#6366f1] text-white hover:bg-[#4f46e5] shadow-indigo-500/20",
+                            : "bg-[hsl(var(--primary))] text-white hover:bg-[hsl(var(--primary)/0.9)] shadow-[hsl(var(--primary)/0.2)]",
                         )}
                       >
                         <ShoppingCart size={18} strokeWidth={2.5} />
@@ -457,7 +459,10 @@ export function ShopPage({ onOpenCart }: { onOpenCart?: () => void }) {
             {loadingMore && (
               <div className="flex justify-center py-8">
                 <div className="flex items-center gap-3 bg-white px-8 py-4 rounded-full border border-slate-100 shadow-xl shadow-slate-200/50">
-                  <Loader2 className="animate-spin text-[#6366f1]" size={20} />
+                  <Loader2
+                    className="animate-spin text-[hsl(var(--primary))]"
+                    size={20}
+                  />
                   <span className="text-[13px] font-bold text-slate-600">
                     Loading more products...
                   </span>

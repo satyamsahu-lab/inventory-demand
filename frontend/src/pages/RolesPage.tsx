@@ -82,8 +82,8 @@ export function RolesPage() {
         subtitle="Create and manage roles (permissions configured in Permissions module)"
         right={
           <>
-            <Button 
-              className="bg-brand-600 hover:bg-brand-700 h-11 px-6 shadow-brand-200"
+            <Button
+              className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] h-11 px-6 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
               onClick={() => {
                 setErrors({});
                 setName("");
@@ -125,11 +125,15 @@ export function RolesPage() {
         }
       >
         <div className="space-y-1.5">
-          <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest px-1">Role Name</label>
+          <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest px-1">
+            Role Name
+          </label>
           <input
             className={cn(
               "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
-              errors.name ? "border-rose-500 ring-4 ring-rose-500/10" : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+              errors.name
+                ? "border-rose-500 ring-4 ring-rose-500/10"
+                : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
             )}
             value={name}
             onChange={(e) => setName(e.target.value)}

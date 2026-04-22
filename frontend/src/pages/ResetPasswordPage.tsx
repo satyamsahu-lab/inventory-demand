@@ -50,7 +50,7 @@ export function ResetPasswordPage() {
   return (
     <div className="card-premium p-8 shadow-premium-xl animate-slide-up max-w-md w-full">
       <div className="flex flex-col items-center mb-8 text-center">
-        <div className="h-14 w-14 rounded-2xl bg-premium-gradient text-white shadow-lg shadow-brand-200 grid place-items-center mb-4">
+        <div className="h-14 w-14 rounded-2xl bg-premium-gradient text-white shadow-lg shadow-[hsl(var(--primary)/0.2)] grid place-items-center mb-4">
           <ShieldCheck size={30} />
         </div>
         <h1 className="text-2xl font-black text-surface-900 tracking-tight">
@@ -78,7 +78,7 @@ export function ResetPasswordPage() {
         <Button
           type="submit"
           disabled={loading || !token}
-          className="w-full h-12 shadow-brand-200 text-base"
+          className="w-full h-12 shadow-[hsl(var(--primary)/0.1)] text-base"
         >
           {loading ? "Updating..." : "Confirm New Password"}
         </Button>
@@ -92,7 +92,7 @@ export function ResetPasswordPage() {
 
       <div className="mt-8 pt-6 border-t border-surface-100 text-center">
         <Link
-          className="inline-flex items-center gap-2 text-xs text-brand-600 font-bold hover:text-brand-700 transition-colors uppercase tracking-wider"
+          className="inline-flex items-center gap-2 text-xs text-[hsl(var(--primary))] font-bold hover:text-[hsl(var(--primary)/0.8)] transition-colors uppercase tracking-wider"
           to="/login"
         >
           <ArrowLeft size={14} />

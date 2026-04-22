@@ -46,7 +46,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
             errors.fullName
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={fullName}
           placeholder="e.g. John Doe"
@@ -63,7 +63,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
             errors.email
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={email}
           placeholder="e.g. john@company.com"
@@ -95,7 +95,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium appearance-none",
             errors.roleId
               ? "border-rose-500 ring-4 ring-rose-500/10"
-              : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+              : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
           )}
           value={roleId}
           onChange={(e) => setRoleId(e.target.value)}
@@ -125,9 +125,9 @@ export const UserForm: React.FC<UserFormProps> = ({
                   name="user-status"
                   checked={status === "active"}
                   onChange={() => setStatus("active")}
-                  className="peer appearance-none w-5 h-5 border-2 border-surface-200 rounded-full checked:border-brand-500 transition-all cursor-pointer"
+                  className="peer appearance-none w-5 h-5 border-2 border-surface-200 rounded-full checked:border-[hsl(var(--primary))] transition-all cursor-pointer"
                 />
-                <div className="absolute w-2.5 h-2.5 rounded-full bg-brand-500 scale-0 peer-checked:scale-100 transition-transform" />
+                <div className="absolute w-2.5 h-2.5 rounded-full bg-[hsl(var(--primary))] scale-0 peer-checked:scale-100 transition-transform" />
               </div>
               <span className="text-sm font-medium text-surface-600 group-hover:text-surface-900 transition-colors">
                 Active

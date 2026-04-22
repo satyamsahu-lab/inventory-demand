@@ -3,8 +3,27 @@ import { pool } from "../db/pool.js";
 export class DashboardRepository {
   async summary(
     scopeAdminId: string,
-    caps: { canProducts: boolean; canSales: boolean; canInventory: boolean },
+    caps: {
+      canProducts: boolean;
+      canSales: boolean;
+      canInventory: boolean;
+      canUsers: boolean;
+    },
+    filters?: { startDate?: string; endDate?: string },
   ) {
+    const dateFilter =
+      filters?.startDate && filters?.endDate
+        ? " AND created_at BETWEEN $2 AND $3"
+        : "";
+    const saleDateFilter =
+      filters?.startDate && filters?.endDate
+        ? " AND sale_date BETWEEN $2 AND $3"
+        : "";
+    const params =
+      filters?.startDate && filters?.endDate
+        ? [scopeAdminId, filters.startDate, filters.endDate]
+        : [scopeAdminId];
+
     const totalProducts = caps.canProducts
       ? ((
           await pool.query<{ total: number }>(
@@ -17,8 +36,8 @@ export class DashboardRepository {
     const totalSales = caps.canSales
       ? ((
           await pool.query<{ total: number }>(
-            "SELECT COALESCE(SUM(quantity_sold), 0)::int as total FROM sales WHERE created_by_admin_id = $1",
-            [scopeAdminId],
+            `SELECT COALESCE(SUM(quantity_sold), 0)::int as total FROM sales WHERE created_by_admin_id = $1${saleDateFilter}`,
+            params,
           )
         ).rows[0]?.total ?? 0)
       : 0;
@@ -30,8 +49,8 @@ export class DashboardRepository {
               `SELECT COALESCE(SUM(s.quantity_sold * p.price), 0)::numeric(12,2) as total
            FROM sales s
            JOIN products p ON p.id = s.product_id
-           WHERE s.created_by_admin_id = $1`,
-              [scopeAdminId],
+           WHERE s.created_by_admin_id = $1${saleDateFilter.replace("sale_date", "s.sale_date")}`,
+              params,
             )
           ).rows[0]?.total ?? 0)
         : 0;
@@ -48,7 +67,53 @@ export class DashboardRepository {
         ).rows[0]?.total ?? 0)
       : 0;
 
-    return { totalProducts, totalSales, lowStockCount, totalRevenue };
+    const totalUsers = caps.canUsers
+      ? ((
+          await pool.query<{ total: number }>(
+            "SELECT COUNT(*)::int as total FROM users WHERE created_by_admin_id = $1",
+            [scopeAdminId],
+          )
+        ).rows[0]?.total ?? 0)
+      : 0;
+
+    return {
+      totalProducts,
+      totalSales,
+      lowStockCount,
+      totalRevenue,
+      totalUsers,
+    };
+  }
+
+  async topSellingProducts(
+    scopeAdminId: string,
+    filters?: { startDate?: string; endDate?: string },
+  ) {
+    const saleDateFilter =
+      filters?.startDate && filters?.endDate
+        ? " AND s.sale_date BETWEEN $2 AND $3"
+        : "";
+    const params =
+      filters?.startDate && filters?.endDate
+        ? [scopeAdminId, filters.startDate, filters.endDate]
+        : [scopeAdminId];
+
+    const { rows } = await pool.query(
+      `SELECT 
+        p.id, 
+        p.name, 
+        p.sku, 
+        COALESCE(SUM(s.quantity_sold), 0)::int as total_qty,
+        COALESCE(SUM(s.quantity_sold * p.price), 0)::numeric(12,2) as total_revenue
+       FROM products p
+       JOIN sales s ON s.product_id = p.id
+       WHERE s.created_by_admin_id = $1${saleDateFilter}
+       GROUP BY p.id, p.name, p.sku
+       ORDER BY total_qty DESC
+       LIMIT 5`,
+      params,
+    );
+    return rows;
   }
 
   async lowStock(scopeAdminId: string) {
@@ -69,14 +134,26 @@ export class DashboardRepository {
     return rows;
   }
 
-  async salesTrends(scopeAdminId: string, days: number) {
+  async salesTrends(
+    scopeAdminId: string,
+    filters?: { startDate?: string; endDate?: string },
+  ) {
+    const saleDateFilter =
+      filters?.startDate && filters?.endDate
+        ? " AND sale_date BETWEEN $2 AND $3"
+        : " AND sale_date >= (current_date - 30)";
+    const params =
+      filters?.startDate && filters?.endDate
+        ? [scopeAdminId, filters.startDate, filters.endDate]
+        : [scopeAdminId];
+
     const { rows } = await pool.query<{ day: string; total: number }>(
       `SELECT sale_date::text as day, SUM(quantity_sold)::int as total
        FROM sales
-       WHERE created_by_admin_id = $1 AND sale_date >= (current_date - $2::int)
+       WHERE created_by_admin_id = $1${saleDateFilter}
        GROUP BY sale_date
        ORDER BY sale_date`,
-      [scopeAdminId, days],
+      params,
     );
     return rows;
   }

@@ -13,9 +13,11 @@ export function Toolbar(props: {
             {props.title}
           </h1>
           {props.subtitle ? (
-            <p className="text-surface-500 mt-1.5 font-medium">{props.subtitle}</p>
+            <p className="text-surface-500 mt-1.5 font-medium">
+              {props.subtitle}
+            </p>
           ) : (
-            <div className="h-1 w-12 bg-brand-600/20 rounded-full mt-2" />
+            <div className="h-1 w-12 bg-[hsl(var(--primary)/0.2)] rounded-full mt-2" />
           )}
         </div>
         <div className="flex items-center gap-3">{props.right}</div>

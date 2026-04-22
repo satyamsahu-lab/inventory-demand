@@ -6,7 +6,7 @@ interface ConfirmStatusChangeModalProps {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  status: "active" | "inactive";
+  status: string;
   count: number;
   loading?: boolean;
 }
@@ -19,7 +19,43 @@ export function ConfirmStatusChangeModal({
   count,
   loading = false,
 }: ConfirmStatusChangeModalProps) {
-  const isActive = status === "active";
+  const getStatusColor = (s: string) => {
+    switch (s.toLowerCase()) {
+      case "active":
+      case "delivered":
+        return "text-emerald-600";
+      case "inactive":
+      case "delete":
+        return "text-rose-600";
+      case "shipped":
+        return "text-blue-600";
+      case "in-transit":
+        return "text-[hsl(var(--primary))]";
+      case "pending":
+        return "text-amber-600";
+      default:
+        return "text-surface-600";
+    }
+  };
+
+  const getButtonColor = (s: string) => {
+    switch (s.toLowerCase()) {
+      case "active":
+      case "delivered":
+        return "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200 text-white";
+      case "inactive":
+      case "delete":
+        return "bg-rose-600 hover:bg-rose-700 shadow-rose-200 text-white";
+      case "shipped":
+        return "bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--secondary)/0.9)] shadow-[hsl(var(--secondary)/0.2)] text-white"; // updated
+      case "in-transit":
+        return "bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] shadow-[hsl(var(--primary)/0.2)] text-white"; // updated
+      case "pending":
+        return "bg-amber-600 hover:bg-amber-700 shadow-amber-200 text-white";
+      default:
+        return "bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] shadow-[hsl(var(--primary)/0.2)] text-white";
+    }
+  };
 
   return (
     <Modal
@@ -37,12 +73,7 @@ export function ConfirmStatusChangeModal({
             Cancel
           </Button>
           <Button
-            className={cn(
-              "px-8 shadow-sm",
-              isActive
-                ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200"
-                : "bg-rose-600 hover:bg-rose-700 shadow-rose-200",
-            )}
+            className={cn("px-8 shadow-sm", getButtonColor(status))}
             onClick={onConfirm}
             disabled={loading}
           >
@@ -59,7 +90,7 @@ export function ConfirmStatusChangeModal({
           <span
             className={cn(
               "font-bold uppercase tracking-wider",
-              isActive ? "text-emerald-600" : "text-rose-600",
+              getStatusColor(status),
             )}
           >
             {status}

@@ -101,7 +101,7 @@ export function InventoryPage() {
           return (
             <button
               type="button"
-              className="text-left font-black text-surface-900 hover:text-brand-600 transition-all hover:translate-x-1"
+              className="text-left font-black text-[hsl(var(--primary))] hover:text-[hsl(var(--primary)/0.8)] transition-all hover:translate-x-1"
               onClick={() => {
                 handleClose();
                 setProductId(row.product_id);
@@ -144,7 +144,7 @@ export function InventoryPage() {
         width: 140,
         cellRenderer: (p: any) => (
           <div>
-            <span className="text-xs font-black text-brand-700 bg-brand-50 border border-brand-100 px-2 py-1 rounded-lg">
+            <span className="text-xs font-black text-[hsl(var(--primary))] bg-[hsl(var(--secondary))] border border-[hsl(var(--border))] px-2 py-1 rounded-lg">
               {p.value}
             </span>
           </div>
@@ -288,14 +288,14 @@ export function InventoryPage() {
           <>
             <div className="relative group">
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-brand-500 transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors"
                 size={18}
               />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search inventory..."
-                className="h-11 w-64 pl-11 pr-4 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all font-medium text-sm shadow-sm"
+                className="h-11 w-64 pl-11 pr-4 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-4 focus:ring-[hsl(var(--primary)/0.1)] focus:border-[hsl(var(--primary))] transition-all font-medium text-sm shadow-sm"
               />
             </div>
             <Button
@@ -314,7 +314,7 @@ export function InventoryPage() {
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "table"
-                    ? "bg-white text-brand-600 shadow-sm"
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                     : "text-surface-400 hover:text-surface-600",
                 )}
               >
@@ -325,7 +325,7 @@ export function InventoryPage() {
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "grid"
-                    ? "bg-white text-brand-600 shadow-sm"
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                     : "text-surface-400 hover:text-surface-600",
                 )}
               >
@@ -341,7 +341,7 @@ export function InventoryPage() {
                 className="h-11"
                 onClick={() => setImportOpen(true)}
               >
-                <Upload size={18} className="text-brand-600" />
+                <Upload size={18} className="text-[hsl(var(--primary))]" />
                 <span>Import</span>
               </Button>
             </div>
@@ -419,7 +419,7 @@ export function InventoryPage() {
                       <div
                         key={r.id}
                         className={cn(
-                          "card-premium group hover:border-brand-300 transition-all duration-300 flex flex-col p-6",
+                          "card-premium group hover:border-[hsl(var(--primary)/0.3)] transition-all duration-300 flex flex-col p-6",
                           isLow &&
                             "border-amber-200 bg-amber-50/10 shadow-lg shadow-amber-500/5",
                         )}
@@ -430,7 +430,7 @@ export function InventoryPage() {
                               "h-12 w-12 rounded-2xl flex items-center justify-center transition-transform shadow-inner-soft group-hover:scale-110",
                               isLow
                                 ? "bg-amber-100 text-amber-600 shadow-amber-200"
-                                : "bg-brand-50 text-brand-600",
+                                : "bg-[hsl(var(--secondary))] text-[hsl(var(--primary))]",
                             )}
                           >
                             <Boxes size={24} />
@@ -445,7 +445,7 @@ export function InventoryPage() {
 
                         <div className="mb-6 flex-1">
                           <h3
-                            className="font-black text-surface-900 text-lg leading-tight group-hover:text-brand-600 transition-colors cursor-pointer"
+                            className="font-black text-surface-900 text-lg leading-tight group-hover:text-[hsl(var(--primary))] transition-colors cursor-pointer"
                             onClick={() => {
                               handleClose();
                               setProductId(r.product_id);
@@ -555,10 +555,10 @@ export function InventoryPage() {
               lowStock.map((r) => (
                 <div
                   key={r.id}
-                  className="p-4 rounded-2xl border border-surface-100 bg-white hover:border-brand-200 hover:shadow-md transition-all group cursor-default"
+                  className="p-4 rounded-2xl border border-surface-100 bg-white hover:border-[hsl(var(--primary)/0.3)] hover:shadow-md transition-all group cursor-default"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <div className="font-bold text-surface-900 group-hover:text-brand-600 transition-colors">
+                    <div className="font-bold text-surface-900 group-hover:text-[hsl(var(--primary))] transition-colors">
                       {r.product_name}
                     </div>
                     <span className="text-[9px] font-black px-2 py-1 rounded-lg bg-rose-50 text-rose-600 border border-rose-100 uppercase tracking-tighter">
@@ -633,8 +633,8 @@ export function InventoryPage() {
                 className={cn(
                   "h-10 px-4 rounded-xl border text-sm font-black transition-all",
                   exportFormat === "csv"
-                    ? "bg-brand-600 text-white border-brand-600"
-                    : "bg-white border-surface-200 text-surface-700 hover:border-brand-300",
+                    ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
+                    : "bg-white border-surface-200 text-surface-700 hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportFormat("csv")}
               >
@@ -645,8 +645,8 @@ export function InventoryPage() {
                 className={cn(
                   "h-10 px-4 rounded-xl border text-sm font-black transition-all",
                   exportFormat === "pdf"
-                    ? "bg-brand-600 text-white border-brand-600"
-                    : "bg-white border-surface-200 text-surface-700 hover:border-brand-300",
+                    ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
+                    : "bg-white border-surface-200 text-surface-700 hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportFormat("pdf")}
               >
@@ -665,8 +665,8 @@ export function InventoryPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "selected"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("selected")}
               >
@@ -682,8 +682,8 @@ export function InventoryPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "page"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("page")}
               >
@@ -699,8 +699,8 @@ export function InventoryPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "all"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("all")}
               >
@@ -724,7 +724,7 @@ export function InventoryPage() {
               Discard
             </Button>
             <Button
-              className="px-8 shadow-brand-200"
+              className="px-8 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
               onClick={() => onSaveQty()}
             >
               Confirm Changes

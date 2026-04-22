@@ -9,6 +9,8 @@ import {
   MoreHorizontal,
   AlertTriangle,
   History,
+  Users,
+  Award,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -18,6 +20,10 @@ import { Toolbar } from "../components/layout/Toolbar";
 import { Chart } from "../components/ui/Chart";
 import { useAuth } from "../store/auth";
 import { Button } from "../components/ui/Button";
+import {
+  DateRangeFilter,
+  type DateRange,
+} from "../components/ui/DateRangeFilter";
 import { formatDateMMDDYYYY } from "../utils/formatDate";
 import { can } from "../services/permissions";
 
@@ -26,6 +32,15 @@ type Summary = {
   totalSales: number;
   lowStockCount: number;
   totalRevenue: number;
+  totalUsers: number;
+};
+
+type TopProduct = {
+  id: string;
+  name: string;
+  sku: string;
+  total_qty: number;
+  total_revenue: number;
 };
 
 type RecentSale = {
@@ -49,17 +64,31 @@ export function DashboardPage() {
     totalSales: 0,
     lowStockCount: 0,
     totalRevenue: 0,
+    totalUsers: 0,
   });
   const [trends, setTrends] = useState<Array<{ day: string; total: number }>>(
     [],
   );
   const [recentSales, setRecentSales] = useState<RecentSale[]>([]);
   const [lowStock, setLowStock] = useState<any[]>([]);
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: new Date(
+      new Date().setDate(new Date().getDate() - 7),
+    ).toISOString(),
+    endDate: new Date().toISOString(),
+    label: "Last 7 Days",
+  });
 
   useEffect(() => {
+    const params = {
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+    };
+
     // Summary data
     api
-      .get<ApiResponse<Summary>>("/dashboard/summary")
+      .get<ApiResponse<Summary>>("/dashboard/summary", { params })
       .then((r) => setSummary(r.data.data))
       .catch((e) =>
         toast.error(
@@ -67,12 +96,23 @@ export function DashboardPage() {
         ),
       );
 
+    // Top selling products
+    if (canSales) {
+      api
+        .get<ApiResponse<{ records: TopProduct[] }>>(
+          "/dashboard/top-selling-products",
+          { params },
+        )
+        .then((r) => setTopProducts(r.data.data.records))
+        .catch(() => {});
+    }
+
     // Sales trends
     if (canSales) {
       api
         .get<ApiResponse<{ records: Array<{ day: string; total: number }> }>>(
           "/dashboard/sales-trends",
-          { params: { days: 7 } },
+          { params: { ...params, days: 7 } },
         )
         .then((r) => setTrends(r.data.data.records))
         .catch(() => {});
@@ -80,7 +120,7 @@ export function DashboardPage() {
       // Recent sales (from sales list API with limit 5)
       api
         .get<ApiResponse<{ records: RecentSale[] }>>("/sales", {
-          params: { page: 1, limit: 5 },
+          params: { ...params, page: 1, limit: 5 },
         })
         .then((r) => setRecentSales(r.data.data.records))
         .catch(() => {});
@@ -93,7 +133,7 @@ export function DashboardPage() {
         .then((r) => setLowStock(r.data.data.records.slice(0, 5)))
         .catch(() => {});
     }
-  }, [canSales, canInventory]);
+  }, [canSales, canInventory, dateRange]);
 
   const salesTrendOption = useMemo(() => {
     return {
@@ -132,7 +172,7 @@ export function DashboardPage() {
           smooth: true,
           showSymbol: true,
           data: trends.map((t) => t.total),
-          lineStyle: { width: 3, color: "#6366f1" },
+          lineStyle: { width: 3, color: "hsl(162 78% 17%)" },
           areaStyle: {
             color: {
               type: "linear",
@@ -141,8 +181,8 @@ export function DashboardPage() {
               x2: 0,
               y2: 1,
               colorStops: [
-                { offset: 0, color: "rgba(99, 102, 241, 0.15)" },
-                { offset: 1, color: "rgba(99, 102, 241, 0)" },
+                { offset: 0, color: "rgba(10, 48, 42, 0.15)" },
+                { offset: 1, color: "rgba(10, 48, 42, 0)" },
               ],
             },
           },
@@ -160,18 +200,19 @@ export function DashboardPage() {
           </h1>
           <p className="text-surface-500 mt-1.5 font-medium">
             Welcome back,{" "}
-            <span className="text-brand-600 font-bold">
+            <span className="text-[hsl(var(--primary))] font-bold">
               {user?.full_name?.split(" ")[0]}
             </span>{" "}
             Here's your inventory overview.
           </p>
         </div>
         <div
-          className="flex gap-3 animate-slide-up"
+          className="flex flex-col sm:flex-row gap-3 animate-slide-up"
           style={{ animationDelay: "0.1s" }}
         >
+          <DateRangeFilter onChange={setDateRange} />
           <Link to="/sales">
-            <Button className="bg-brand-600 hover:bg-brand-700 h-11 px-6 shadow-brand-200">
+            <Button className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] h-11 px-6 shadow-[0_0_20px_rgba(var(--primary),0.2)] w-full sm:w-auto">
               <ArrowUpRight size={20} />
               <span>New Sale</span>
             </Button>
@@ -179,22 +220,34 @@ export function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-10">
         <StatCard
           label="TOTAL REVENUE"
           value={`$${(summary.totalRevenue || 0).toLocaleString()}`}
-          trend="Lifetime earnings"
-          icon={<span className="text-brand-600 font-black text-xl">$</span>}
-          iconBg="bg-brand-50"
+          trend="Revenue in period"
+          icon={
+            <span className="text-[hsl(var(--primary))] font-black text-xl">
+              $
+            </span>
+          }
+          iconBg="bg-[hsl(var(--secondary))]"
           delay="0.1s"
         />
         <StatCard
           label="TOTAL SALES"
           value={(summary.totalSales || 0).toLocaleString()}
-          trend="Total units sold"
+          trend="Units sold in period"
           icon={<ShoppingCart className="text-emerald-600" size={24} />}
           iconBg="bg-emerald-50"
           delay="0.2s"
+        />
+        <StatCard
+          label="TOTAL USERS"
+          value={(summary.totalUsers || 0).toLocaleString()}
+          trend="Total users"
+          icon={<Users className="text-[hsl(var(--primary))]" size={24} />}
+          iconBg="bg-[hsl(var(--secondary))]"
+          delay="0.3s"
         />
         <StatCard
           label="PRODUCTS"
@@ -202,7 +255,7 @@ export function DashboardPage() {
           trend="Active catalog"
           icon={<Boxes className="text-amber-600" size={24} />}
           iconBg="bg-amber-50"
-          delay="0.3s"
+          delay="0.4s"
         />
         <StatCard
           label="LOW STOCK"
@@ -210,14 +263,15 @@ export function DashboardPage() {
           trend="Requires attention"
           icon={<AlertTriangle className="text-rose-600" size={24} />}
           iconBg="bg-rose-50"
-          delay="0.4s"
+          delay="0.5s"
+          className="sm:col-span-2 lg:col-span-1"
         />
       </div>
 
       <div className="grid grid-cols-12 gap-8 mb-10">
         <div
           className="col-span-12 lg:col-span-8 card-premium flex flex-col animate-slide-up"
-          style={{ animationDelay: "0.5s" }}
+          style={{ animationDelay: "0.6s" }}
         >
           <div className="px-8 py-6 border-b border-surface-100 flex items-center justify-between bg-gradient-to-r from-white to-surface-50/30">
             <div>
@@ -228,9 +282,6 @@ export function DashboardPage() {
                 Revenue performance over the last 7 days
               </p>
             </div>
-            <button className="h-10 w-10 flex items-center justify-center rounded-xl text-surface-400 hover:bg-surface-100 hover:text-surface-600 transition-all">
-              <MoreHorizontal size={20} />
-            </button>
           </div>
           <div className="p-8 flex-1">
             {trends.length > 0 ? (
@@ -247,73 +298,93 @@ export function DashboardPage() {
         </div>
 
         <div
-          className="col-span-12 lg:col-span-4 card-premium flex flex-col animate-slide-up"
-          style={{ animationDelay: "0.6s" }}
+          className="col-span-12 lg:col-span-4 flex flex-col gap-8 animate-slide-up"
+          style={{ animationDelay: "0.7s" }}
         >
-          <div className="px-8 py-6 border-b border-surface-100 flex items-center justify-between bg-gradient-to-r from-white to-surface-50/30">
-            <h3 className="font-bold text-surface-900 text-xl tracking-tight">
-              Stock Alerts
-            </h3>
-            <Link to="/inventory">
-              <Button
-                variant="ghost"
-                className="text-xs h-8 px-3 text-brand-600 hover:text-brand-700 hover:bg-brand-50"
-              >
-                Manage All
-              </Button>
-            </Link>
-          </div>
-          <div className="p-6 space-y-4 flex-1">
-            {lowStock.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-surface-400 py-12">
-                <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mb-4">
-                  <Boxes className="text-emerald-500 opacity-40" size={32} />
-                </div>
-                <p className="font-medium">All products are well stocked</p>
+          <div className="card-premium flex-1 flex flex-col">
+            <div className="px-8 py-6 border-b border-surface-100 flex items-center justify-between bg-gradient-to-r from-white to-surface-50/30">
+              <div className="flex items-center gap-3">
+                <Award size={20} className="text-amber-500" />
+                <h3 className="font-bold text-surface-900 text-lg tracking-tight">
+                  Top Products
+                </h3>
               </div>
-            ) : (
-              lowStock.map((r) => (
-                <div
-                  key={r.product_id}
-                  className="p-4 rounded-2xl border border-surface-100 bg-white hover:border-brand-200 hover:shadow-md transition-all group cursor-default"
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <div className="font-bold text-surface-900 group-hover:text-brand-600 transition-colors">
-                        {r.name}
-                      </div>
-                      <div className="text-xs font-bold text-surface-400 mt-0.5 tracking-wider uppercase">
-                        SKU: {r.sku}
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-black px-2 py-1 rounded-lg bg-rose-50 text-rose-600 border border-rose-100 uppercase tracking-tighter">
-                      CRITICAL
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-surface-500 font-bold uppercase tracking-widest text-[9px]">
-                        Stock Level
-                      </span>
-                      <span className="font-black text-surface-700">
-                        {r.quantity}{" "}
-                        <span className="text-surface-400 font-medium">
-                          / {r.min_stock_threshold}
-                        </span>
-                      </span>
-                    </div>
-                    <div className="h-2 bg-surface-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-premium-gradient rounded-full shadow-[0_0_8px_rgba(99,102,241,0.5)]"
-                        style={{
-                          width: `${Math.max(5, Math.min(100, (r.quantity / r.min_stock_threshold) * 100))}%`,
-                        }}
-                      ></div>
-                    </div>
-                  </div>
+            </div>
+            <div className="p-6 space-y-4">
+              {topProducts.length === 0 ? (
+                <div className="py-10 text-center text-surface-400">
+                  <p className="text-sm italic">No sales data found</p>
                 </div>
-              ))
-            )}
+              ) : (
+                topProducts.map((p, i) => (
+                  <div
+                    key={p.id}
+                    className="flex items-center gap-4 group cursor-default"
+                  >
+                    <div className="h-10 w-10 rounded-xl bg-surface-50 border border-surface-100 flex items-center justify-center text-xs font-black text-surface-400 group-hover:bg-[hsl(var(--secondary))] group-hover:text-[hsl(var(--primary))] group-hover:border-[hsl(var(--border))] transition-all">
+                      #{i + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-surface-900 text-sm truncate group-hover:text-[hsl(var(--primary))] transition-colors">
+                        {p.name}
+                      </div>
+                      <div className="text-[10px] font-bold text-surface-400 uppercase tracking-widest mt-0.5">
+                        {p.total_qty} units sold
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-black text-surface-900">
+                        ${Number(p.total_revenue).toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="card-premium flex-1 flex flex-col">
+            <div className="px-8 py-6 border-b border-surface-100 flex items-center justify-between bg-gradient-to-r from-white to-surface-50/30">
+              <h3 className="font-bold text-surface-900 text-lg tracking-tight">
+                Stock Alerts
+              </h3>
+              <Link to="/inventory">
+                <Button
+                  variant="ghost"
+                  className="text-xs h-8 px-3 text-[hsl(var(--primary))] hover:text-[hsl(var(--primary)/0.9)] hover:bg-[hsl(var(--secondary))]"
+                >
+                  View All
+                </Button>
+              </Link>
+            </div>
+            <div className="p-6 space-y-4">
+              {lowStock.length === 0 ? (
+                <div className="py-10 text-center text-surface-400">
+                  <p className="text-sm italic">All items stocked</p>
+                </div>
+              ) : (
+                lowStock.slice(0, 3).map((r) => (
+                  <div key={r.product_id} className="space-y-2">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-bold text-surface-900 truncate pr-2">
+                        {r.name}
+                      </span>
+                      <span className="font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100 text-[9px] uppercase tracking-tighter">
+                        {r.quantity} left
+                      </span>
+                    </div>
+                    <div className="h-1.5 bg-surface-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-rose-500 rounded-full"
+                        style={{
+                          width: `${(r.quantity / r.min_stock_threshold) * 100}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -324,7 +395,7 @@ export function DashboardPage() {
       >
         <div className="px-8 py-6 border-b border-surface-100 flex items-center justify-between bg-gradient-to-r from-white to-surface-50/30">
           <div className="flex items-center gap-4">
-            <div className="h-12 w-12 bg-brand-50 rounded-2xl flex items-center justify-center text-brand-600 shadow-inner-soft">
+            <div className="h-12 w-12 bg-[hsl(var(--secondary))] rounded-2xl flex items-center justify-center text-[hsl(var(--primary))] shadow-inner-soft">
               <History size={24} />
             </div>
             <div>
@@ -339,7 +410,7 @@ export function DashboardPage() {
           <Link to="/sales">
             <Button
               variant="secondary"
-              className="text-xs h-10 px-5 border-surface-200 text-brand-600 font-bold hover:bg-brand-50 hover:border-brand-100"
+              className="text-xs h-10 px-5 border-surface-200 text-[hsl(var(--primary))] font-bold hover:bg-[hsl(var(--secondary))] hover:border-[hsl(var(--border))]"
             >
               View Transaction History
             </Button>
@@ -377,10 +448,10 @@ export function DashboardPage() {
                 recentSales.map((sale) => (
                   <tr
                     key={sale.id}
-                    className="hover:bg-brand-50/30 transition-all duration-300 group cursor-default"
+                    className="hover:bg-[hsl(var(--secondary)/0.3)] transition-all duration-300 group cursor-default"
                   >
                     <td className="px-8 py-5">
-                      <div className="text-sm font-bold text-surface-900 group-hover:text-brand-600 transition-colors">
+                      <div className="text-sm font-bold text-surface-900 group-hover:text-[hsl(var(--primary))] transition-colors">
                         {sale.product_name}
                       </div>
                     </td>
@@ -422,7 +493,7 @@ function StatCard({ label, value, trend, icon, iconBg, delay }: any) {
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-[10px] font-black text-surface-400 tracking-[0.2em] uppercase mb-3 group-hover:text-brand-500 transition-colors">
+          <p className="text-[10px] font-black text-surface-400 tracking-[0.2em] uppercase mb-3 group-hover:text-[hsl(var(--primary))] transition-colors">
             {label}
           </p>
           <h2 className="text-4xl font-black text-surface-900 tracking-tight group-hover:scale-105 origin-left transition-transform duration-300">
@@ -436,7 +507,7 @@ function StatCard({ label, value, trend, icon, iconBg, delay }: any) {
         </div>
       </div>
       <div className="flex items-center gap-2 mt-6">
-        <div className="h-1 w-8 bg-brand-500 rounded-full opacity-30 group-hover:w-12 transition-all duration-300" />
+        <div className="h-1 w-8 bg-[hsl(var(--primary))] rounded-full opacity-30 group-hover:w-12 transition-all duration-300" />
         <span className="text-[11px] font-bold text-surface-400 uppercase tracking-widest italic group-hover:text-surface-600 transition-colors">
           {trend}
         </span>

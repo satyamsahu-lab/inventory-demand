@@ -25,7 +25,7 @@ export const InventoryForm: React.FC<InventoryFormProps> = ({
               "w-full bg-surface-50 border rounded-xl px-4 py-4 text-lg font-black focus:outline-none transition-all",
               errors.qty
                 ? "border-rose-500 ring-4 ring-rose-500/10"
-                : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+                : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
             )}
             value={qty}
             type="number"

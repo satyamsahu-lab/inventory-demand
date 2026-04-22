@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { z } from "zod";
 import { ok, created } from "../shared/http/api-response.js";
 import { authService } from "../services/auth-service.js";
+import { AuditLogService } from "../services/audit-log-service.js";
 import { userRepository } from "../repositories/user-repository.js";
 import { roleRepository } from "../repositories/role-repository.js";
 import { hashPassword } from "../shared/security/password.js";
@@ -23,17 +24,19 @@ export class UserAuthController {
 
     // Get the "User" role ID
     const roles = await roleRepository.listVisibleRoles("Super Admin", "");
-    const userRole = roles.find(r => r.name === "User");
+    const userRole = roles.find((r) => r.name === "User");
     if (!userRole) {
       throw new Error("User role not found");
     }
 
     const hashedPassword = await hashPassword(password);
-    
+
     // For storefront users, we'll set created_by_admin_id to null or a system ID
     // In this project's current logic, it seems mandatory. We'll find the Super Admin to be the "creator".
     const { pool } = await import("../db/pool.js");
-    const { rows: superAdmins } = await pool.query("SELECT id FROM users JOIN roles ON roles.id = users.role_id WHERE roles.name = 'Super Admin' LIMIT 1");
+    const { rows: superAdmins } = await pool.query(
+      "SELECT id FROM users JOIN roles ON roles.id = users.role_id WHERE roles.name = 'Super Admin' LIMIT 1",
+    );
     const creatorId = superAdmins[0]?.id;
 
     const user = await userRepository.create({
@@ -46,11 +49,31 @@ export class UserAuthController {
 
     // Auto-login
     const result = await authService.login({ email, password });
+
+    await AuditLogService.log({
+      userId: user.id,
+      action: "LOGIN",
+      module: "AUTH",
+      description: `User registered and logged in`,
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     return res.status(201).json(created(result));
   }
 
   async login(req: Request, res: Response) {
     const result = await authService.login(req.body);
+
+    await AuditLogService.log({
+      userId: result.user.id,
+      action: "LOGIN",
+      module: "AUTH",
+      description: `${result.user.role.name} logged in from storefront`,
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     return res.json(ok(result));
   }
 
@@ -60,6 +83,20 @@ export class UserAuthController {
     }
     const user = await userRepository.getById(req.user.id);
     return res.json(ok({ user }));
+  }
+
+  async logout(req: Request, res: Response) {
+    if (req.user) {
+      await AuditLogService.log({
+        userId: req.user.id,
+        action: "LOGOUT",
+        module: "AUTH",
+        description: `${req.user.role.name} logged out from storefront`,
+        ipAddress: req.ip,
+        userAgent: req.get("user-agent"),
+      });
+    }
+    return res.json(ok({ ok: true }, "Logged out"));
   }
 }
 

@@ -109,7 +109,7 @@ export function SalesPage() {
           return (
             <button
               type="button"
-              className="text-left font-black text-surface-900 hover:text-brand-600 transition-all hover:translate-x-1"
+              className="text-left font-black text-[hsl(var(--primary))] hover:text-[hsl(var(--primary)/0.8)] transition-all hover:translate-x-1"
               onClick={() => {
                 handleClose();
                 setEditing(row);
@@ -291,14 +291,14 @@ export function SalesPage() {
           <>
             <div className="relative group">
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-brand-500 transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors"
                 size={18}
               />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search transactions..."
-                className="h-11 w-64 pl-11 pr-4 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all font-medium text-sm shadow-sm"
+                className="h-11 w-64 pl-11 pr-4 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-4 focus:ring-[hsl(var(--primary)/0.1)] focus:border-[hsl(var(--primary))] transition-all font-medium text-sm shadow-sm"
               />
             </div>
             <Button
@@ -317,7 +317,7 @@ export function SalesPage() {
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "table"
-                    ? "bg-white text-brand-600 shadow-sm"
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                     : "text-surface-400 hover:text-surface-600",
                 )}
               >
@@ -328,7 +328,7 @@ export function SalesPage() {
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "grid"
-                    ? "bg-white text-brand-600 shadow-sm"
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                     : "text-surface-400 hover:text-surface-600",
                 )}
               >
@@ -348,7 +348,7 @@ export function SalesPage() {
             </Button>
 
             <Button
-              className="bg-brand-600 hover:bg-brand-700 h-11 px-6 shadow-brand-200"
+              className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] h-11 px-6 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
               onClick={() => {
                 handleClose();
                 setOpen(true);
@@ -439,7 +439,7 @@ export function SalesPage() {
                   </div>
 
                   <div className="mb-4 flex-1">
-                    <h3 className="font-black text-surface-900 text-base leading-tight group-hover:text-brand-600 transition-colors">
+                    <h3 className="font-black text-surface-900 text-base leading-tight group-hover:text-[hsl(var(--primary))] transition-colors">
                       {r.product_name}
                     </h3>
                     <span className="inline-block mt-1.5 text-[10px] font-mono font-black text-surface-600 bg-surface-100 px-2 py-0.5 rounded uppercase">
@@ -491,7 +491,10 @@ export function SalesPage() {
             <Button variant="ghost" className="px-6" onClick={handleClose}>
               Cancel
             </Button>
-            <Button className="px-8 shadow-brand-200" onClick={() => onSave()}>
+            <Button
+              className="px-8 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
+              onClick={() => onCreate()}
+            >
               {editing ? "Update Record" : "Log Sale"}
             </Button>
           </>
@@ -548,8 +551,8 @@ export function SalesPage() {
                 className={cn(
                   "h-10 px-4 rounded-xl border text-sm font-black transition-all",
                   exportFormat === "csv"
-                    ? "bg-brand-600 text-white border-brand-600"
-                    : "bg-white border-surface-200 text-surface-700 hover:border-brand-300",
+                    ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
+                    : "bg-white border-surface-200 text-surface-700 hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportFormat("csv")}
               >
@@ -560,7 +563,7 @@ export function SalesPage() {
                 className={cn(
                   "h-10 px-4 rounded-xl border text-sm font-black transition-all",
                   exportFormat === "pdf"
-                    ? "bg-brand-600 text-white border-brand-600"
+                    ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
                     : "bg-white border-surface-200 text-surface-700 hover:border-brand-300",
                 )}
                 onClick={() => setExportFormat("pdf")}
@@ -580,8 +583,8 @@ export function SalesPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "selected"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("selected")}
               >
@@ -597,8 +600,8 @@ export function SalesPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "page"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("page")}
               >
@@ -614,8 +617,8 @@ export function SalesPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "all"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("all")}
               >

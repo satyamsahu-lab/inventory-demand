@@ -4,6 +4,7 @@ import { z } from "zod";
 import { ok } from "../shared/http/api-response.js";
 import { BadRequestError } from "../shared/http/http-errors.js";
 import { userRepository } from "../repositories/user-repository.js";
+import { AuditLogService } from "../services/audit-log-service.js";
 import { env } from "../shared/env.js";
 
 function toAbsoluteUrl(maybePath: string | null) {
@@ -19,6 +20,18 @@ function toAbsoluteUrl(maybePath: string | null) {
 export class ProfileController {
   async get(req: Request, res: Response) {
     const user = await userRepository.getById(req.user!.id);
+
+    if (user) {
+      await AuditLogService.log({
+        userId: req.user!.id,
+        action: "view",
+        module: "PROFILE",
+        description: `${req.user!.role.name} viewed profile`,
+        ipAddress: req.ip,
+        userAgent: req.get("user-agent"),
+      });
+    }
+
     const record = user
       ? {
           ...user,
@@ -65,6 +78,17 @@ export class ProfileController {
       hobbies: body.hobbies,
       profile_image: profileImage,
     });
+
+    if (record) {
+      await AuditLogService.log({
+        userId: req.user!.id,
+        action: "UPDATE",
+        module: "PROFILE",
+        description: `${req.user!.role.name} updated profile`,
+        ipAddress: req.ip,
+        userAgent: req.get("user-agent"),
+      });
+    }
 
     const normalized = record
       ? {

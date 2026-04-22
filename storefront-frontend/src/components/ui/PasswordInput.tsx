@@ -6,7 +6,11 @@ interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement>
   error?: string;
 }
 
-export function PasswordInput({ className, error, ...props }: PasswordInputProps) {
+export function PasswordInput({
+  className,
+  error,
+  ...props
+}: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => setShowPassword(!showPassword);
@@ -17,9 +21,9 @@ export function PasswordInput({ className, error, ...props }: PasswordInputProps
         {...props}
         type={showPassword ? "text" : "password"}
         className={cn(
-          "w-full bg-surface-50 border-none rounded-2xl py-3.5 pl-12 pr-12 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all font-medium",
+          "w-full bg-surface-50 border-none rounded-2xl py-3.5 pl-12 pr-12 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all font-medium",
           error && "ring-2 ring-rose-500/20 border-rose-500",
-          className
+          className,
         )}
       />
       <button

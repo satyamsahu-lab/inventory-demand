@@ -112,7 +112,9 @@ export function ProfilePage() {
                   ) : (
                     <div className="flex flex-col items-center text-surface-400 gap-2">
                       <User size={48} strokeWidth={1} />
-                      <span className="text-[10px] font-bold uppercase tracking-widest">No Image</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest">
+                        No Image
+                      </span>
                     </div>
                   )}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-20">
@@ -121,7 +123,7 @@ export function ProfilePage() {
                 </div>
                 <div className="absolute -inset-2 bg-premium-gradient rounded-[2.8rem] opacity-20 blur-xl scale-95 group-hover:scale-100 transition-transform" />
               </div>
-              
+
               <div className="mt-6 w-full">
                 <input
                   type="file"
@@ -136,12 +138,16 @@ export function ProfilePage() {
                 <Button
                   variant="secondary"
                   className="w-full h-11"
-                  onClick={() => document.getElementById("avatar-upload")?.click()}
+                  onClick={() =>
+                    document.getElementById("avatar-upload")?.click()
+                  }
                 >
-                  <Camera size={18} className="text-brand-600" />
+                  <Camera size={18} className="text-[hsl(var(--primary))]" />
                   <span>Change Photo</span>
                 </Button>
-                <p className="text-[10px] text-surface-400 text-center font-bold uppercase tracking-widest mt-3">JPG or PNG (Max 2MB)</p>
+                <p className="text-[10px] text-surface-400 text-center font-bold uppercase tracking-widest mt-3">
+                  JPG or PNG (Max 2MB)
+                </p>
               </div>
             </div>
           </div>
@@ -150,8 +156,10 @@ export function ProfilePage() {
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 px-1 mb-1">
-                  <Mail size={12} className="text-brand-600" />
-                  <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">Account Email</label>
+                  <Mail size={12} className="text-[hsl(var(--primary))]" />
+                  <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">
+                    Account Email
+                  </label>
                 </div>
                 <input
                   className="w-full bg-surface-50 border border-surface-200 rounded-xl px-4 py-3 text-sm font-medium text-surface-500 cursor-not-allowed shadow-inner-soft"
@@ -162,13 +170,17 @@ export function ProfilePage() {
 
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 px-1 mb-1">
-                  <User size={12} className="text-brand-600" />
-                  <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">Display Name</label>
+                  <User size={12} className="text-[hsl(var(--primary))]" />
+                  <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">
+                    Display Name
+                  </label>
                 </div>
                 <input
                   className={cn(
                     "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
-                    errors.fullName ? "border-rose-500 ring-4 ring-rose-500/10" : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+                    errors.fullName
+                      ? "border-rose-500 ring-4 ring-rose-500/10"
+                      : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
                   )}
                   value={fullName}
                   placeholder="Enter your full name"
@@ -179,8 +191,10 @@ export function ProfilePage() {
 
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 px-1 mb-1">
-                  <Heart size={12} className="text-brand-600" />
-                  <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">Your Hobbies</label>
+                  <Heart size={12} className="text-[hsl(var(--primary))]" />
+                  <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest">
+                    Your Hobbies
+                  </label>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {HOBBIES.map((h) => {
@@ -193,13 +207,15 @@ export function ProfilePage() {
                         className={cn(
                           "px-4 py-3 rounded-2xl text-xs font-bold border transition-all duration-300 text-left relative overflow-hidden group",
                           isSelected
-                            ? "bg-brand-50 border-brand-200 text-brand-700 shadow-sm"
-                            : "bg-white border-surface-100 text-surface-500 hover:border-brand-100 hover:text-brand-600 hover:bg-surface-50"
+                            ? "bg-[hsl(var(--secondary))] border-[hsl(var(--primary)/0.2)] text-[hsl(var(--primary))] shadow-sm"
+                            : "bg-white border-surface-100 text-surface-500 hover:border-[hsl(var(--primary)/0.1)] hover:text-[hsl(var(--primary))] hover:bg-surface-50",
                         )}
                       >
                         <div className="flex items-center justify-between relative z-10">
                           {h}
-                          {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-brand-600 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />}
+                          {isSelected && (
+                            <div className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--primary))] shadow-[0_0_8px_rgba(var(--primary),0.6)]" />
+                          )}
                         </div>
                       </button>
                     );

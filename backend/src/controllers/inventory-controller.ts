@@ -1,8 +1,9 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
-
+import { pool } from "../db/pool.js";
 import { ok } from "../shared/http/api-response.js";
 import { listingQuerySchema, buildPagination } from "../shared/http/listing.js";
+import { AuditLogService } from "../services/audit-log-service.js";
 import { getScopeAdminIdOrThrow } from "../shared/security/request-scope.js";
 import { inventoryRepository } from "../repositories/inventory-repository.js";
 import { parseCsv, parseExcel } from "../shared/http/import.js";
@@ -15,6 +16,16 @@ export class InventoryController {
     const scopeAdminId = getScopeAdminIdOrThrow(req);
 
     const result = await inventoryRepository.list(scopeAdminId, q);
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "view",
+      module: "INVENTORY",
+      description: `${req.user!.role.name} viewed inventory list`,
+      metadata: { page: q.page, limit: q.limit },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
 
     return res.json(
       ok({
@@ -38,6 +49,24 @@ export class InventoryController {
       body.product_id,
       body.quantity,
     );
+
+    // Fetch SKU for audit log
+    const { rows: pRows } = await pool.query(
+      "SELECT sku FROM products WHERE id = $1",
+      [body.product_id],
+    );
+    const sku = pRows[0]?.sku || body.product_id;
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "UPDATE",
+      module: "INVENTORY",
+      description: `${req.user!.role.name} updated inventory for product (${sku}) to ${body.quantity}`,
+      metadata: { productId: body.product_id, sku, quantity: body.quantity },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     return res.json(ok({ record: row }, "Saved"));
   }
 
@@ -170,6 +199,17 @@ export class InventoryController {
 
     if (format === "csv") {
       const csv = csvFromRows(headers, result.records as any);
+
+      await AuditLogService.log({
+        userId: req.user!.id,
+        action: "EXPORT",
+        module: "INVENTORY",
+        description: `${req.user!.role.name} exported inventory as CSV`,
+        metadata: { format: "csv", count: result.records.length },
+        ipAddress: req.ip,
+        userAgent: req.get("user-agent"),
+      });
+
       res.setHeader("Content-Type", "text/csv");
       res.setHeader(
         "Content-Disposition",
@@ -183,6 +223,17 @@ export class InventoryController {
       headers,
       result.records as any,
     );
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "EXPORT",
+      module: "INVENTORY",
+      description: `${req.user!.role.name} exported inventory as PDF`,
+      metadata: { format: "pdf", count: result.records.length },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",

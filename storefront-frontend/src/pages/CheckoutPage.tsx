@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { publicApi } from "../services/public-api";
+import { auditLogService } from "../services/audit-log";
 import { useUserAuth } from "../store/user-auth";
 import { cn } from "../utils/cn";
 import toast from "react-hot-toast";
@@ -73,6 +74,14 @@ export function CheckoutPage() {
       setOrderSuccess(data.data.order);
       updateCartCount(0);
       toast.success("Order placed successfully!");
+
+      // Log order activity
+      await auditLogService.logFrontendActivity({
+        action: "ORDER_PLACED",
+        module: "ORDER",
+        description: `User placed order #${data.data.order.id.slice(0, 8)}`,
+        metadata: { orderId: data.data.order.id, total: subtotal },
+      });
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Checkout failed");
     } finally {
@@ -97,7 +106,7 @@ export function CheckoutPage() {
           </h1>
           <p className="text-surface-500 font-medium italic">
             Thank you for your purchase. Your order ID is{" "}
-            <span className="text-brand-600 font-black not-italic">
+            <span className="text-[hsl(var(--primary))] font-black not-italic">
               #{orderSuccess.id.slice(0, 8)}
             </span>
           </p>
@@ -105,13 +114,13 @@ export function CheckoutPage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
           <button
             onClick={() => navigate("/account/orders")}
-            className="bg-white border-2 border-surface-200 px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest hover:border-brand-600 hover:text-brand-600 transition-all active:scale-95"
+            className="bg-white border-2 border-surface-200 px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))] transition-all active:scale-95"
           >
             View My Orders
           </button>
           <button
             onClick={() => navigate("/shop")}
-            className="bg-surface-900 text-white px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-brand-600 transition-all shadow-xl shadow-surface-900/10 active:scale-95 flex items-center justify-center gap-2 group"
+            className="bg-surface-900 text-white px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-[hsl(var(--primary))] transition-all shadow-xl shadow-surface-900/10 active:scale-95 flex items-center justify-center gap-2 group"
           >
             Continue Shopping
             <ArrowRight
@@ -140,7 +149,8 @@ export function CheckoutPage() {
           {/* Shipping Address */}
           <section className="bg-white rounded-[2.5rem] p-8 border border-surface-200 shadow-sm space-y-6">
             <h2 className="text-xl font-black text-surface-900 flex items-center gap-2">
-              <MapPin size={22} className="text-brand-600" /> Shipping Address
+              <MapPin size={22} className="text-[hsl(var(--primary))]" />{" "}
+              Shipping Address
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1 md:col-span-2">
@@ -155,7 +165,7 @@ export function CheckoutPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, fullName: e.target.value })
                   }
-                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all"
+                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all"
                 />
               </div>
               <div className="space-y-1 md:col-span-2">
@@ -170,7 +180,7 @@ export function CheckoutPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, addressLine1: e.target.value })
                   }
-                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all"
+                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all"
                 />
               </div>
               <div className="space-y-1">
@@ -185,7 +195,7 @@ export function CheckoutPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, city: e.target.value })
                   }
-                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all"
+                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all"
                 />
               </div>
               <div className="space-y-1">
@@ -200,7 +210,7 @@ export function CheckoutPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, state: e.target.value })
                   }
-                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all"
+                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all"
                 />
               </div>
               <div className="space-y-1">
@@ -215,7 +225,7 @@ export function CheckoutPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, pincode: e.target.value })
                   }
-                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all"
+                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all"
                 />
               </div>
               <div className="space-y-1">
@@ -230,7 +240,7 @@ export function CheckoutPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
                   }
-                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-brand-500/20 transition-all"
+                  className="w-full bg-surface-50 border-none rounded-2xl py-3.5 px-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all"
                 />
               </div>
             </div>
@@ -239,14 +249,15 @@ export function CheckoutPage() {
           {/* Payment Method */}
           <section className="bg-white rounded-[2.5rem] p-8 border border-surface-200 shadow-sm space-y-6">
             <h2 className="text-xl font-black text-surface-900 flex items-center gap-2">
-              <CreditCard size={22} className="text-brand-600" /> Payment Method
+              <CreditCard size={22} className="text-[hsl(var(--primary))]" />{" "}
+              Payment Method
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label
                 className={cn(
                   "relative flex flex-col p-6 rounded-3xl border-2 transition-all cursor-pointer group",
                   formData.paymentMethod === "Cash on Delivery"
-                    ? "border-brand-600 bg-brand-50/50 shadow-lg shadow-brand-100/50"
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary)/0.5)] shadow-lg shadow-[hsl(var(--primary)/0.1)]"
                     : "border-surface-100 hover:border-surface-200",
                 )}
               >
@@ -270,7 +281,7 @@ export function CheckoutPage() {
                   className={cn(
                     "absolute top-4 right-4 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all",
                     formData.paymentMethod === "Cash on Delivery"
-                      ? "bg-brand-600 border-brand-600 text-white"
+                      ? "bg-[hsl(var(--primary))] border-[hsl(var(--primary))] text-white"
                       : "border-surface-200 text-transparent",
                   )}
                 >
@@ -332,7 +343,7 @@ export function CheckoutPage() {
                 <span className="text-base font-black text-surface-900">
                   Total
                 </span>
-                <span className="text-2xl font-black text-brand-600">
+                <span className="text-2xl font-black text-[hsl(var(--primary))]">
                   ${subtotal.toFixed(2)}
                 </span>
               </div>
@@ -341,7 +352,7 @@ export function CheckoutPage() {
             <button
               type="submit"
               disabled={isProcessing}
-              className="w-full bg-surface-900 text-white py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] hover:bg-brand-600 transition-all shadow-xl shadow-surface-900/10 active:scale-95 flex items-center justify-center gap-2 group disabled:opacity-50"
+              className="w-full bg-surface-900 text-white py-4 rounded-2xl text-sm font-black uppercase tracking-[0.2em] hover:bg-[hsl(var(--primary))] transition-all shadow-xl shadow-surface-900/10 active:scale-95 flex items-center justify-center gap-2 group disabled:opacity-50"
             >
               {isProcessing ? "Placing Order..." : "Confirm & Pay"}
               <ArrowRight

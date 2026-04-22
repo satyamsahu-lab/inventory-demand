@@ -89,9 +89,9 @@ export function StorefrontLayout({
   }, [isLoggedIn, updateCartCount]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans text-slate-900">
+    <div className="min-h-screen bg-[hsl(var(--background))] flex flex-col font-sans text-[hsl(var(--foreground))]">
       {/* Top Banner */}
-      <div className="bg-[#6366f1] text-white py-2 px-4 text-center text-[11px] font-bold uppercase tracking-[0.15em] flex items-center justify-center gap-2">
+      <div className="bg-[hsl(var(--primary))] text-white py-2 px-4 text-center text-[11px] font-bold uppercase tracking-[0.15em] flex items-center justify-center gap-2">
         <span className="opacity-80">
           FREE SHIPPING ON ORDERS OVER $100 - USE CODE
         </span>
@@ -99,16 +99,16 @@ export function StorefrontLayout({
       </div>
 
       {/* Navbar */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-[hsl(var(--border))]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20 gap-8">
             {/* Logo */}
             <Link to="/shop" className="flex items-center gap-2 shrink-0">
-              <div className="h-9 w-9 rounded-xl bg-[#6366f1] flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+              <div className="h-9 w-9 rounded-xl bg-[hsl(var(--primary))] flex items-center justify-center text-white shadow-lg shadow-[hsl(var(--primary)/0.2)]">
                 <ShoppingCart size={20} strokeWidth={2.5} />
               </div>
-              <span className="font-bold text-xl tracking-tight text-slate-900">
-                Luxe<span className="text-[#6366f1]">Store</span>
+              <span className="font-bold text-xl tracking-tight text-[hsl(var(--foreground))]">
+                Luxe<span className="text-[hsl(var(--primary))]">Store</span>
               </span>
             </Link>
 
@@ -122,11 +122,11 @@ export function StorefrontLayout({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search premium products..."
-                className="w-full bg-slate-50 border-none rounded-full py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                className="w-full bg-[hsl(var(--muted))] border-none rounded-full py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.1)] transition-all placeholder:text-[hsl(var(--muted-foreground))]"
               />
               <button
                 type="submit"
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#6366f1] transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[hsl(var(--muted-foreground))] group-focus-within:text-[hsl(var(--primary))] transition-colors"
               >
                 <Search size={18} />
               </button>
@@ -137,14 +137,14 @@ export function StorefrontLayout({
               <nav className="flex items-center gap-8">
                 <Link
                   to="/shop"
-                  className="text-[13px] font-semibold text-slate-600 hover:text-[#6366f1] transition-colors"
+                  className="text-[13px] font-semibold text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--primary))] transition-colors"
                 >
                   Shop
                 </Link>
                 {isLoggedIn && (
                   <Link
                     to="/account/orders"
-                    className="text-[13px] font-semibold text-slate-600 hover:text-[#6366f1] transition-colors flex items-center gap-1.5"
+                    className="text-[13px] font-semibold text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--primary))] transition-colors flex items-center gap-1.5"
                   >
                     <Package size={14} />
                     Orders
@@ -152,7 +152,7 @@ export function StorefrontLayout({
                 )}
               </nav>
 
-              <div className="flex items-center gap-3 border-l border-slate-200 pl-8">
+              <div className="flex items-center gap-3 border-l border-[hsl(var(--border))] pl-8">
                 <button
                   onClick={() => {
                     if (isLoggedIn) {
@@ -161,14 +161,14 @@ export function StorefrontLayout({
                       setIsLoginModalOpen(true);
                     }
                   }}
-                  className="relative p-2 rounded-full hover:bg-slate-50 transition-all group cursor-pointer"
+                  className="relative p-2 rounded-full hover:bg-[hsl(var(--muted))] transition-all group cursor-pointer"
                 >
                   <ShoppingCart
                     size={20}
-                    className="text-slate-700 group-hover:text-[#6366f1] transition-colors"
+                    className="text-[hsl(var(--foreground))] group-hover:text-[hsl(var(--primary))] transition-colors"
                   />
                   {cartCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 bg-[#6366f1] text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                    <span className="absolute -top-0.5 -right-0.5 bg-[hsl(var(--primary))] text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                       {cartCount}
                     </span>
                   )}
@@ -178,16 +178,16 @@ export function StorefrontLayout({
                   <div className="flex items-center gap-3">
                     <Link
                       to="/account/profile"
-                      className="bg-indigo-50 text-[#6366f1] px-4 py-2 rounded-xl text-[13px] font-bold hover:bg-indigo-100 transition-all flex items-center gap-2"
+                      className="bg-[hsl(var(--secondary))] text-[hsl(var(--primary))] px-4 py-2 rounded-xl text-[13px] font-bold hover:bg-[hsl(var(--secondary)/0.8)] transition-all flex items-center gap-2"
                     >
-                      <div className="h-5 w-5 rounded-full bg-indigo-200 flex items-center justify-center">
+                      <div className="h-5 w-5 rounded-full bg-[hsl(var(--primary)/0.1)] flex items-center justify-center">
                         <UserIcon size={12} />
                       </div>
                       {user?.fullName?.split(" ")[0]}
                     </Link>
                     <button
                       onClick={logout}
-                      className="p-2 rounded-full hover:bg-red-50 text-slate-500 hover:text-red-500 transition-all"
+                      className="p-2 rounded-full hover:bg-[hsl(var(--destructive)/0.1)] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))] transition-all"
                     >
                       <LogOut size={18} />
                     </button>
@@ -195,7 +195,7 @@ export function StorefrontLayout({
                 ) : (
                   <button
                     onClick={() => setIsLoginModalOpen(true)}
-                    className="bg-[#6366f1] text-white px-6 py-2.5 rounded-full text-[13px] font-bold hover:bg-[#4f46e5] transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+                    className="bg-[hsl(var(--primary))] text-white px-6 py-2.5 rounded-full text-[13px] font-bold hover:bg-[hsl(var(--primary)/0.9)] transition-all shadow-lg shadow-[hsl(var(--primary)/0.2)] active:scale-95"
                   >
                     Sign In
                   </button>
@@ -206,7 +206,7 @@ export function StorefrontLayout({
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 rounded-xl hover:bg-slate-50 transition-all text-slate-700"
+              className="lg:hidden p-2 rounded-xl hover:bg-[hsl(var(--muted))] transition-all text-[hsl(var(--foreground))]"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -229,7 +229,7 @@ export function StorefrontLayout({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products..."
-                className="w-full bg-slate-50 border-none rounded-2xl py-3 pl-11 pr-4 text-sm focus:ring-2 focus:ring-indigo-500/10"
+                className="w-full bg-slate-50 border-none rounded-2xl py-3 pl-11 pr-4 text-sm focus:ring-2 focus:ring-[hsl(var(--primary)/0.1)]"
               />
               <button
                 type="submit"
@@ -278,11 +278,11 @@ export function StorefrontLayout({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
             <div className="space-y-6">
               <div className="flex items-center gap-2">
-                <div className="h-9 w-9 rounded-xl bg-[#6366f1] flex items-center justify-center text-white">
+                <div className="h-9 w-9 rounded-xl bg-[hsl(var(--primary))] flex items-center justify-center text-white">
                   <ShoppingCart size={20} strokeWidth={2.5} />
                 </div>
-                <span className="font-bold text-xl tracking-tight text-slate-900">
-                  Luxe<span className="text-[#6366f1]">Store</span>
+                <span className="font-bold text-xl tracking-tight text-[hsl(var(--foreground))]">
+                  Luxe<span className="text-[hsl(var(--primary))]">Store</span>
                 </span>
               </div>
               <p className="text-slate-500 text-[13px] leading-relaxed max-w-xs font-medium">
@@ -299,7 +299,7 @@ export function StorefrontLayout({
                 <li>
                   <Link
                     to="/shop"
-                    className="hover:text-[#6366f1] transition-colors"
+                    className="hover:text-[hsl(var(--primary))] transition-colors"
                   >
                     All Products
                   </Link>
@@ -307,7 +307,7 @@ export function StorefrontLayout({
                 <li>
                   <Link
                     to="/shop#products"
-                    className="hover:text-[#6366f1] transition-colors"
+                    className="hover:text-[hsl(var(--primary))] transition-colors"
                   >
                     Categories
                   </Link>
@@ -316,7 +316,7 @@ export function StorefrontLayout({
                   <li>
                     <Link
                       to="/account/orders"
-                      className="hover:text-[#6366f1] transition-colors"
+                      className="hover:text-[hsl(var(--primary))] transition-colors"
                     >
                       My Orders
                     </Link>
@@ -326,14 +326,14 @@ export function StorefrontLayout({
             </div>
 
             <div>
-              <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 mb-8">
+              <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[hsl(var(--muted-foreground))] mb-8">
                 Support
               </h4>
-              <ul className="space-y-4 text-[13px] font-semibold text-slate-600">
+              <ul className="space-y-4 text-[13px] font-semibold text-[hsl(var(--muted-foreground))]">
                 <li>
                   <Link
                     to="#"
-                    className="hover:text-[#6366f1] transition-colors"
+                    className="hover:text-[hsl(var(--primary))] transition-colors"
                   >
                     Shipping Info
                   </Link>
@@ -341,7 +341,7 @@ export function StorefrontLayout({
                 <li>
                   <Link
                     to="#"
-                    className="hover:text-[#6366f1] transition-colors"
+                    className="hover:text-[hsl(var(--primary))] transition-colors"
                   >
                     Returns
                   </Link>
@@ -349,7 +349,7 @@ export function StorefrontLayout({
                 <li>
                   <Link
                     to="#"
-                    className="hover:text-[#6366f1] transition-colors"
+                    className="hover:text-[hsl(var(--primary))] transition-colors"
                   >
                     FAQ
                   </Link>
@@ -358,34 +358,40 @@ export function StorefrontLayout({
             </div>
 
             <div>
-              <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 mb-8">
+              <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[hsl(var(--muted-foreground))] mb-8">
                 Newsletter
               </h4>
-              <p className="text-slate-500 text-[13px] mb-6 font-medium">
+              <p className="text-[hsl(var(--muted-foreground))] text-[13px] mb-6 font-medium">
                 Subscribe for early access and deals.
               </p>
               <div className="flex gap-2 relative">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full bg-slate-50 border-none rounded-full py-3 pl-6 pr-14 text-[13px] focus:ring-2 focus:ring-indigo-500/10 placeholder:text-slate-400"
+                  className="w-full bg-[hsl(var(--muted))] border-none rounded-full py-3 pl-6 pr-14 text-[13px] focus:ring-2 focus:ring-[hsl(var(--primary)/0.1)] placeholder:text-[hsl(var(--muted-foreground))]"
                 />
-                <button className="absolute right-1.5 top-1.5 bottom-1.5 aspect-square bg-[#6366f1] text-white rounded-full flex items-center justify-center hover:bg-[#4f46e5] transition-all shadow-md shadow-indigo-500/20">
+                <button className="absolute right-1.5 top-1.5 bottom-1.5 aspect-square bg-[hsl(var(--primary))] text-white rounded-full flex items-center justify-center hover:bg-[hsl(var(--primary)/0.9)] transition-all shadow-md shadow-[hsl(var(--primary)/0.2)]">
                   <ChevronRight size={18} strokeWidth={2.5} />
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-slate-400 text-[11px] font-semibold">
+          <div className="pt-8 border-t border-[hsl(var(--border))] flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-[hsl(var(--muted-foreground))] text-[11px] font-semibold">
               © 2026 LuxeStore. All rights reserved.
             </p>
-            <div className="flex gap-10 text-[11px] font-bold text-slate-500">
-              <Link to="#" className="hover:text-[#6366f1] transition-colors">
+            <div className="flex gap-10 text-[11px] font-bold text-[hsl(var(--muted-foreground))]">
+              <Link
+                to="#"
+                className="hover:text-[hsl(var(--primary))] transition-colors"
+              >
                 Privacy Policy
               </Link>
-              <Link to="#" className="hover:text-[#6366f1] transition-colors">
+              <Link
+                to="#"
+                className="hover:text-[hsl(var(--primary))] transition-colors"
+              >
                 Terms of Service
               </Link>
             </div>

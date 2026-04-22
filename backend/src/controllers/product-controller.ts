@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { ok, created } from "../shared/http/api-response.js";
 import { listingQuerySchema, buildPagination } from "../shared/http/listing.js";
+import { AuditLogService } from "../services/audit-log-service.js";
 import { getScopeAdminIdOrThrow } from "../shared/security/request-scope.js";
 import { productRepository } from "../repositories/product-repository.js";
 import { productService } from "../services/product-service.js";
@@ -31,6 +32,16 @@ export class ProductController {
 
     const result = await productRepository.list(scopeAdminId, q, isSuperAdmin);
 
+    await AuditLogService.log({
+      userId: req.user?.id,
+      action: "view",
+      module: "PRODUCTS",
+      description: `${req.user?.role.name} viewed product list`,
+      metadata: { page: q.page, limit: q.limit },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     const records = result.records.map((r: any) => ({
       ...r,
       image_urls: (r.images ?? []).map((i: any) =>
@@ -58,6 +69,19 @@ export class ProductController {
     const id = z.string().uuid().parse(req.params.id);
 
     const row = await productRepository.getById(scopeAdminId, id, isSuperAdmin);
+
+    if (row) {
+      await AuditLogService.log({
+        userId: req.user?.id,
+        action: "view",
+        module: "PRODUCTS",
+        description: `${req.user?.role.name} viewed product (${row.sku})`,
+        metadata: { productId: id },
+        ipAddress: req.ip,
+        userAgent: req.get("user-agent"),
+      });
+    }
+
     const images = row
       ? await productImageRepository.listByProductId(row.id)
       : [];
@@ -136,6 +160,17 @@ export class ProductController {
       ...input,
       status: req.body.status || "active",
     });
+
+    await AuditLogService.log({
+      userId: req.user?.id,
+      action: "CREATE",
+      module: "PRODUCTS",
+      description: `${req.user?.role.name} created product (${row.sku})`,
+      metadata: { productId: row.id },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     return res.status(201).json(created({ record: row }));
   }
 
@@ -151,6 +186,19 @@ export class ProductController {
       { ...input, status: req.body.status },
       isSuperAdmin,
     );
+
+    if (row) {
+      await AuditLogService.log({
+        userId: req.user?.id,
+        action: "UPDATE",
+        module: "PRODUCTS",
+        description: `${req.user?.role.name} updated product (${row.sku})`,
+        metadata: { productId: id },
+        ipAddress: req.ip,
+        userAgent: req.get("user-agent"),
+      });
+    }
+
     return res.json(ok({ record: row }));
   }
 
@@ -184,6 +232,17 @@ export class ProductController {
     const id = z.string().uuid().parse(req.params.id);
 
     await productRepository.delete(scopeAdminId, id);
+
+    await AuditLogService.log({
+      userId: req.user?.id,
+      action: "DELETE",
+      module: "PRODUCTS",
+      description: `${req.user?.role.name} deleted a product (ID: ${id})`,
+      metadata: { productId: id },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     return res.json(ok({ ok: true }, "Deleted"));
   }
 
@@ -203,6 +262,17 @@ export class ProductController {
       status,
       isSuperAdmin,
     );
+
+    await AuditLogService.log({
+      userId: req.user?.id,
+      action: "UPDATE",
+      module: "PRODUCTS",
+      description: `${req.user?.role.name} bulk updated status of ${updated.length} products to ${status}`,
+      metadata: { count: updated.length, status },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     return res.json(ok({ count: updated.length }, "Status updated"));
   }
 
@@ -233,6 +303,16 @@ export class ProductController {
       scopeAdminId,
       parsed.records,
     );
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "IMPORT",
+      module: "PRODUCTS",
+      description: `${req.user!.role.name} imported ${parsed.records.length} products from ${file.originalname}`,
+      metadata: { count: parsed.records.length, fileName: file.originalname },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
 
     return res.json(ok({ summary }, "Imported"));
   }
@@ -287,6 +367,17 @@ export class ProductController {
 
     if (format === "csv") {
       const csv = csvFromRows(headers, result.records as any);
+
+      await AuditLogService.log({
+        userId: req.user!.id,
+        action: "EXPORT",
+        module: "PRODUCTS",
+        description: `${req.user!.role.name} exported products as CSV`,
+        metadata: { format: "csv", count: result.records.length },
+        ipAddress: req.ip,
+        userAgent: req.get("user-agent"),
+      });
+
       res.setHeader("Content-Type", "text/csv");
       res.setHeader(
         "Content-Disposition",
@@ -300,6 +391,17 @@ export class ProductController {
       headers,
       result.records as any,
     );
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "EXPORT",
+      module: "PRODUCTS",
+      description: `${req.user!.role.name} exported products as PDF`,
+      metadata: { format: "pdf", count: result.records.length },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'attachment; filename="products.pdf"');
     return res.send(pdf);

@@ -58,7 +58,7 @@ export function LoginPage() {
   return (
     <div className="card-premium p-8 shadow-premium-xl animate-slide-up">
       <div className="flex flex-col items-center mb-8">
-        <div className="h-14 w-14 rounded-2xl bg-premium-gradient text-white shadow-lg shadow-brand-200 grid place-items-center mb-4">
+        <div className="h-14 w-14 rounded-2xl bg-[hsl(var(--primary))] text-white shadow-lg shadow-[hsl(var(--primary)/0.2)] grid place-items-center mb-4">
           <Boxes size={32} />
         </div>
         <h1 className="text-2xl font-black text-surface-900 tracking-tight">
@@ -79,7 +79,7 @@ export function LoginPage() {
               "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
               errors.email
                 ? "border-rose-500 ring-4 ring-rose-500/10"
-                : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500",
+                : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
             )}
             value={email}
             type="email"
@@ -94,7 +94,7 @@ export function LoginPage() {
               Password
             </label>
             <Link
-              className="text-[10px] font-bold text-brand-600 hover:text-brand-700 uppercase tracking-wider"
+              className="text-[10px] font-bold text-[hsl(var(--primary))] hover:text-[hsl(var(--primary)/0.9)] uppercase tracking-wider"
               to="/forgot-password"
             >
               Forgot?
@@ -112,7 +112,7 @@ export function LoginPage() {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full h-12 mt-2 shadow-brand-200 text-base"
+          className="w-full h-12 mt-2 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] shadow-[0_0_20px_rgba(var(--primary),0.2)] text-base"
         >
           {loading ? "Authenticating..." : "Sign In to Dashboard"}
         </Button>
@@ -121,7 +121,7 @@ export function LoginPage() {
       <div className="mt-8 pt-6 border-t border-surface-100 text-center">
         <p className="text-xs text-surface-400 font-medium">
           Don't have an account?{" "}
-          <span className="text-brand-600 font-bold cursor-pointer hover:underline">
+          <span className="text-[hsl(var(--primary))] font-bold cursor-pointer hover:underline">
             Contact Administrator
           </span>
         </p>

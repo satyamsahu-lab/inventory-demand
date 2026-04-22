@@ -160,7 +160,7 @@ export function CategoriesPage({
           const row: Category = p.data;
           return (
             <button
-              className="text-left font-bold text-surface-900 hover:text-brand-600 transition-all hover:translate-x-1"
+              className="text-left font-bold text-[hsl(var(--primary))] hover:text-[hsl(var(--primary)/0.8)] transition-all hover:translate-x-1"
               onClick={() => handleEdit(row)}
               type="button"
             >
@@ -346,7 +346,7 @@ export function CategoriesPage({
           <>
             <div className="relative group">
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-brand-500 transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors"
                 size={18}
               />
               <input
@@ -354,7 +354,7 @@ export function CategoriesPage({
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search name..."
                 onKeyDown={(e) => e.key === "Enter" && load().catch(() => {})}
-                className="h-11 w-64 pl-11 pr-4 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all font-medium text-sm shadow-sm"
+                className="h-11 w-64 pl-11 pr-4 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-4 focus:ring-[hsl(var(--primary)/0.1)] focus:border-[hsl(var(--primary))] transition-all font-medium text-sm shadow-sm"
               />
             </div>
 
@@ -404,7 +404,7 @@ export function CategoriesPage({
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "table"
-                    ? "bg-white text-brand-600 shadow-sm"
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                     : "text-surface-400 hover:text-surface-600",
                 )}
               >
@@ -415,7 +415,7 @@ export function CategoriesPage({
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "grid"
-                    ? "bg-white text-brand-600 shadow-sm"
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                     : "text-surface-400 hover:text-surface-600",
                 )}
               >
@@ -427,7 +427,7 @@ export function CategoriesPage({
 
             {can(permissions as any, moduleName, "add") && (
               <Button
-                className="bg-brand-600 hover:bg-brand-700 h-11 px-6 shadow-brand-200"
+                className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] h-11 px-6 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
                 onClick={onAdd}
               >
                 <Plus size={20} className="mr-1.5" /> Add{" "}
@@ -500,12 +500,12 @@ export function CategoriesPage({
                   className="bg-white border border-surface-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group flex flex-col"
                 >
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="h-14 w-14 rounded-2xl bg-surface-50 border border-surface-100 flex items-center justify-center text-surface-400 group-hover:bg-brand-50 group-hover:text-brand-600 transition-colors">
+                    <div className="h-14 w-14 rounded-2xl bg-surface-50 border border-surface-100 flex items-center justify-center text-surface-400 group-hover:bg-[hsl(var(--secondary))] group-hover:text-[hsl(var(--primary))] transition-colors">
                       <Layers size={28} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3
-                        className="font-bold text-surface-900 truncate hover:text-brand-600 transition-colors cursor-pointer"
+                        className="font-bold text-surface-900 truncate hover:text-[hsl(var(--primary))] transition-colors cursor-pointer"
                         onClick={() => handleEdit(r)}
                       >
                         {r.name}
@@ -519,7 +519,7 @@ export function CategoriesPage({
                   </div>
 
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-surface-50">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border bg-brand-50 text-brand-700 border-brand-100 uppercase tracking-tight">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border bg-[hsl(var(--secondary))] text-[hsl(var(--primary))] border-[hsl(var(--border))] uppercase tracking-tight">
                       {type === "category" ? "Category" : "Subcategory"}
                     </span>
                     <p className="text-[10px] text-surface-400 font-medium uppercase tracking-wider">
@@ -560,7 +560,10 @@ export function CategoriesPage({
             <Button variant="secondary" className="px-6" onClick={handleClose}>
               Cancel
             </Button>
-            <Button className="px-8 shadow-brand-200" onClick={() => onSave()}>
+            <Button
+              className="px-8 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
+              onClick={() => onSave()}
+            >
               Save
             </Button>
           </div>

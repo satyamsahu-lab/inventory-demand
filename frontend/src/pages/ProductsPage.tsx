@@ -123,7 +123,7 @@ function ProductImageCarousel({ urls }: { urls: string[] }) {
             ))}
           </div>
         ) : (
-          <div className="h-full w-full grid place-items-center text-brand-600 bg-surface-50/50">
+          <div className="h-full w-full grid place-items-center text-[hsl(var(--primary))] bg-surface-50/50">
             <img
               src="https://placehold.co/400x400?text=No+Image"
               className="h-full w-full object-cover opacity-20"
@@ -242,7 +242,7 @@ function ProductImageCarousel({ urls }: { urls: string[] }) {
                   className={cn(
                     "relative h-16 w-16 rounded-lg overflow-hidden border-2 transition-all shrink-0 hover:scale-105 active:scale-95",
                     i === active
-                      ? "border-brand-500 scale-110"
+                      ? "border-[hsl(var(--primary))] scale-110"
                       : "border-transparent opacity-50 hover:opacity-100",
                   )}
                 >
@@ -388,9 +388,9 @@ export function ProductsPage() {
           const row: Product = p.data;
           return (
             <button
-              className="text-left font-bold text-surface-900 hover:text-brand-600 transition-all hover:translate-x-1"
-              onClick={() => onEdit(row)}
               type="button"
+              className="text-left font-black text-[hsl(var(--primary))] hover:text-[hsl(var(--primary)/0.8)] transition-all hover:translate-x-1"
+              onClick={() => onEdit(row)}
             >
               {row.name}
             </button>
@@ -425,7 +425,7 @@ export function ProductsPage() {
         width: 120,
         cellRenderer: (p: any) => (
           <div>
-            <span className="inline-block min-w-[32px] text-center text-xs font-black text-brand-700 bg-brand-50 border border-brand-100 px-2 py-1 rounded-lg">
+            <span className="inline-block min-w-[32px] text-center text-xs font-black text-[hsl(var(--primary))] bg-[hsl(var(--secondary))] border border-[hsl(var(--border))] px-2 py-1 rounded-lg">
               {p.value}
             </span>
           </div>
@@ -462,7 +462,7 @@ export function ProductsPage() {
               headerName: "Added By",
               width: 160,
               cellRenderer: (p: any) => (
-                <span className="font-bold text-brand-600">
+                <span className="font-bold text-[hsl(var(--primary))]">
                   {p.value || "System"}
                 </span>
               ),
@@ -764,14 +764,14 @@ export function ProductsPage() {
           <>
             <div className="relative group">
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-brand-500 transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 group-focus-within:text-[hsl(var(--primary))] transition-colors"
                 size={18}
               />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search name or SKU..."
-                className="h-11 w-64 pl-11 pr-4 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all font-medium text-sm shadow-sm"
+                className="h-11 w-64 pl-11 pr-4 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-4 focus:ring-[hsl(var(--primary)/0.1)] focus:border-[hsl(var(--primary))] transition-all font-medium text-sm shadow-sm"
               />
             </div>
             <Button
@@ -790,7 +790,7 @@ export function ProductsPage() {
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "table"
-                    ? "bg-white text-brand-600 shadow-sm"
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                     : "text-surface-400 hover:text-surface-600",
                 )}
               >
@@ -801,7 +801,7 @@ export function ProductsPage() {
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "grid"
-                    ? "bg-white text-brand-600 shadow-sm"
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
                     : "text-surface-400 hover:text-surface-600",
                 )}
               >
@@ -848,7 +848,7 @@ export function ProductsPage() {
                   className="h-11"
                   onClick={() => setImportOpen(true)}
                 >
-                  <Upload size={18} className="text-brand-600" />
+                  <Upload size={18} className="text-[hsl(var(--primary))]" />
                   <span>Import</span>
                 </Button>
               )}
@@ -865,7 +865,7 @@ export function ProductsPage() {
 
             {canAdd && (
               <Button
-                className="bg-brand-600 hover:bg-brand-700 h-11 px-6 shadow-brand-200"
+                className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)] h-11 px-6 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
                 onClick={onCreate}
               >
                 <Plus size={20} />
@@ -935,7 +935,7 @@ export function ProductsPage() {
               {records.map((r) => (
                 <div
                   key={r.id}
-                  className="card-premium group hover:border-brand-300 transition-all duration-300 flex flex-col p-6"
+                  className="card-premium group hover:border-[hsl(var(--primary)/0.3)] transition-all duration-300 flex flex-col p-6"
                 >
                   <div className="mb-4">
                     <ProductImageCarousel
@@ -946,7 +946,7 @@ export function ProductsPage() {
                   <div className="flex justify-between items-start gap-4 mb-6 flex-1">
                     <div className="min-w-0 flex-1">
                       <h3
-                        className="font-black text-surface-900 text-lg leading-tight group-hover:text-brand-600 transition-colors cursor-pointer truncate"
+                        className="font-black text-surface-900 text-lg leading-tight group-hover:text-[hsl(var(--primary))] transition-colors cursor-pointer truncate"
                         title={r.name}
                         onClick={() => onEdit(r)}
                       >
@@ -963,7 +963,7 @@ export function ProductsPage() {
                       <p className="text-[10px] font-black text-surface-400 uppercase tracking-widest mb-1">
                         Unit Price
                       </p>
-                      <p className="text-xl font-black text-brand-600">
+                      <p className="text-xl font-black text-[hsl(var(--primary))]">
                         ${Number(r.price).toLocaleString()}
                       </p>
                     </div>
@@ -974,7 +974,7 @@ export function ProductsPage() {
                       <p className="text-[9px] font-black text-surface-400 uppercase tracking-[0.2em] mb-1">
                         Min Threshold
                       </p>
-                      <span className="inline-block px-2.5 py-1 rounded-lg bg-brand-50 text-brand-700 text-[10px] font-black border border-brand-100 uppercase tracking-wider">
+                      <span className="inline-block px-2.5 py-1 rounded-lg bg-[hsl(var(--secondary))] text-[hsl(var(--primary))] text-[10px] font-black border border-[hsl(var(--primary)/0.1)] uppercase tracking-wider">
                         {r.min_stock_threshold} Units
                       </span>
                     </div>
@@ -1018,7 +1018,10 @@ export function ProductsPage() {
             <Button variant="ghost" className="px-6" onClick={handleClose}>
               Cancel
             </Button>
-            <Button className="px-8 shadow-brand-200" onClick={() => onSave()}>
+            <Button
+              className="px-8 shadow-[0_0_20px_rgba(var(--primary),0.2)]"
+              onClick={() => onSave()}
+            >
               {editing ? "Update Product" : "Save Product"}
             </Button>
           </>
@@ -1099,8 +1102,8 @@ export function ProductsPage() {
                 className={cn(
                   "h-10 px-4 rounded-xl border text-sm font-black transition-all",
                   exportFormat === "csv"
-                    ? "bg-brand-600 text-white border-brand-600"
-                    : "bg-white border-surface-200 text-surface-700 hover:border-brand-300",
+                    ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
+                    : "bg-white border-surface-200 text-surface-700 hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportFormat("csv")}
               >
@@ -1111,8 +1114,8 @@ export function ProductsPage() {
                 className={cn(
                   "h-10 px-4 rounded-xl border text-sm font-black transition-all",
                   exportFormat === "pdf"
-                    ? "bg-brand-600 text-white border-brand-600"
-                    : "bg-white border-surface-200 text-surface-700 hover:border-brand-300",
+                    ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
+                    : "bg-white border-surface-200 text-surface-700 hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportFormat("pdf")}
               >
@@ -1131,8 +1134,8 @@ export function ProductsPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "selected"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("selected")}
               >
@@ -1148,8 +1151,8 @@ export function ProductsPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "page"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("page")}
               >
@@ -1165,8 +1168,8 @@ export function ProductsPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "all"
-                    ? "border-brand-600 bg-brand-50"
-                    : "border-surface-200 bg-white hover:border-brand-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("all")}
               >

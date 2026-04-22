@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Shield, CheckCircle2, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
 import { api } from "../services/api";
 import type { ApiResponse } from "../types/index";
 import { Toolbar } from "../components/layout/Toolbar";
 import { Button } from "../components/ui/Button";
-import { cn } from "../utils/formatDate";
 
 type RoleRow = { id: string; name: string };
 type PermissionRow = {

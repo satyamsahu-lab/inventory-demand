@@ -6,6 +6,7 @@ import { listingQuerySchema, buildPagination } from "../shared/http/listing.js";
 import { getScopeAdminIdOrThrow } from "../shared/security/request-scope.js";
 import { userRepository } from "../repositories/user-repository.js";
 import { roleRepository } from "../repositories/role-repository.js";
+import { AuditLogService } from "../services/audit-log-service.js";
 import { hashPassword } from "../shared/security/password.js";
 import { ForbiddenError } from "../shared/http/http-errors.js";
 import type { DbUser } from "../repositories/user-repository.js";
@@ -22,6 +23,16 @@ export class UserController {
     }
 
     const result = await userRepository.list(scopeAdminId, q);
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "view",
+      module: "USERS",
+      description: `${req.user!.role.name} viewed users list`,
+      metadata: { page: q.page, limit: q.limit },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
 
     const sanitized = result.records.map((u: DbUser) => ({
       id: u.id,
@@ -84,6 +95,16 @@ export class UserController {
       throw new ForbiddenError("Create failed");
     }
 
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "CREATE",
+      module: "USERS",
+      description: `${req.user!.role.name} created user (${createdUser.full_name})`,
+      metadata: { createdUserId: createdUser.id },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     return res.status(201).json(
       created({
         record: {
@@ -139,6 +160,16 @@ export class UserController {
     if (!updated) {
       throw new ForbiddenError("Not allowed");
     }
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "UPDATE",
+      module: "USERS",
+      description: `${req.user!.role.name} updated user (${updated.full_name})`,
+      metadata: { updatedUserId: updated.id },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
 
     return res.json(
       ok(
@@ -204,12 +235,34 @@ export class UserController {
 
     if (format === "csv") {
       const csv = csvFromRows(headers, result.records as any);
+
+      await AuditLogService.log({
+        userId: req.user!.id,
+        action: "EXPORT",
+        module: "USERS",
+        description: `${req.user!.role.name} exported users as CSV`,
+        metadata: { format: "csv", count: result.records.length },
+        ipAddress: req.ip,
+        userAgent: req.get("user-agent"),
+      });
+
       res.setHeader("Content-Type", "text/csv");
       res.setHeader("Content-Disposition", 'attachment; filename="users.csv"');
       return res.send(csv);
     }
 
     const pdf = await pdfTableBuffer("Users", headers, result.records as any);
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "EXPORT",
+      module: "USERS",
+      description: `${req.user!.role.name} exported users as PDF`,
+      metadata: { format: "pdf", count: result.records.length },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'attachment; filename="users.pdf"');
     return res.send(pdf);
@@ -229,6 +282,17 @@ export class UserController {
       ids,
       status,
     );
+
+    await AuditLogService.log({
+      userId: req.user!.id,
+      action: "UPDATE",
+      module: "USERS",
+      description: `${req.user!.role.name} bulk updated status of ${updated.length} users to ${status}`,
+      metadata: { count: updated.length, status },
+      ipAddress: req.ip,
+      userAgent: req.get("user-agent"),
+    });
+
     return res.json(ok({ count: updated.length }, "Status updated"));
   }
 }

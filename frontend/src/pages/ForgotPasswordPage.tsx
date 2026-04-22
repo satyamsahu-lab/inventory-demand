@@ -21,7 +21,7 @@ export function ForgotPasswordPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrors({});
-    
+
     const result = forgotSchema.safeParse({ email });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -46,20 +46,28 @@ export function ForgotPasswordPage() {
   return (
     <div className="card-premium p-8 shadow-premium-xl animate-slide-up max-w-md w-full">
       <div className="flex flex-col items-center mb-8 text-center">
-        <div className="h-14 w-14 rounded-2xl bg-premium-gradient text-white shadow-lg shadow-brand-200 grid place-items-center mb-4">
+        <div className="h-14 w-14 rounded-2xl bg-premium-gradient text-white shadow-lg shadow-[hsl(var(--primary)/0.2)] grid place-items-center mb-4">
           <KeyRound size={30} />
         </div>
-        <h1 className="text-2xl font-black text-surface-900 tracking-tight">Recover Password</h1>
-        <p className="text-surface-500 text-sm font-medium mt-1">Enter your email to receive a recovery link</p>
+        <h1 className="text-2xl font-black text-surface-900 tracking-tight">
+          Recover Password
+        </h1>
+        <p className="text-surface-500 text-sm font-medium mt-1">
+          Enter your email to receive a recovery link
+        </p>
       </div>
 
       <form className="space-y-6" onSubmit={onSubmit}>
         <div className="space-y-1.5">
-          <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest px-1">Registered Email</label>
+          <label className="text-[10px] font-black text-surface-400 uppercase tracking-widest px-1">
+            Registered Email
+          </label>
           <input
             className={cn(
               "w-full bg-surface-50 border rounded-xl px-4 py-3 text-sm focus:outline-none transition-all font-medium",
-              errors.email ? "border-rose-500 ring-4 ring-rose-500/10" : "border-surface-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+              errors.email
+                ? "border-rose-500 ring-4 ring-rose-500/10"
+                : "border-surface-200 focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] focus:border-[hsl(var(--primary))]",
             )}
             value={email}
             type="email"
@@ -68,19 +76,19 @@ export function ForgotPasswordPage() {
           />
           <FieldError error={errors.email} />
         </div>
-        
+
         <Button
           type="submit"
           disabled={loading}
-          className="w-full h-12 shadow-brand-200 text-base"
+          className="w-full h-12 shadow-[hsl(var(--primary)/0.1)] text-base"
         >
           {loading ? "Sending..." : "Send Reset Link"}
         </Button>
       </form>
-      
+
       <div className="mt-8 pt-6 border-t border-surface-100 text-center">
-        <Link 
-          className="inline-flex items-center gap-2 text-xs text-brand-600 font-bold hover:text-brand-700 transition-colors uppercase tracking-wider" 
+        <Link
+          className="inline-flex items-center gap-2 text-xs text-[hsl(var(--primary))] font-bold hover:text-[hsl(var(--primary)/0.8)] transition-colors uppercase tracking-wider"
           to="/login"
         >
           <ArrowLeft size={14} />

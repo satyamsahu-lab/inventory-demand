@@ -119,9 +119,9 @@ export function UsersPage() {
           const row: UserRow = p.data;
           return (
             <button
-              className="text-left font-bold text-slate-900 hover:text-indigo-700 transition-all hover:translate-x-1"
-              onClick={() => onEdit(row)}
               type="button"
+              className="text-left font-bold text-[hsl(var(--primary))] hover:text-[hsl(var(--primary)/0.8)] transition-all hover:translate-x-1"
+              onClick={() => onEdit(row)}
             >
               {row.full_name}
             </button>
@@ -140,7 +140,7 @@ export function UsersPage() {
         width: 140,
         cellRenderer: (p: any) => (
           <div>
-            <span className="inline-flex items-center px-2.5 rounded-full text-[10px] font-bold border bg-indigo-50 text-indigo-700 border-indigo-100 uppercase tracking-tight">
+            <span className="inline-flex items-center px-2.5 rounded-full text-[10px] font-bold border bg-[hsl(var(--secondary))] text-[hsl(var(--primary))] border-[hsl(var(--border))] uppercase tracking-tight">
               {p.value}
             </span>
           </div>
@@ -393,7 +393,7 @@ export function UsersPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search name or email"
-                className="h-10 w-64 pl-10 pr-3 rounded-xl border border-slate-200 bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none"
+                className="h-10 w-64 pl-10 pr-3 rounded-xl border border-surface-200 bg-white focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.2)] transition-all outline-none"
               />
             </div>
             <Button variant="secondary" onClick={() => load().catch(() => {})}>
@@ -407,8 +407,8 @@ export function UsersPage() {
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "table"
-                    ? "bg-white text-indigo-600 shadow-sm"
-                    : "text-slate-400 hover:text-slate-600",
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
+                    : "text-surface-400 hover:text-surface-600",
                 )}
               >
                 <List size={18} />
@@ -418,8 +418,8 @@ export function UsersPage() {
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center transition-all",
                   viewMode === "grid"
-                    ? "bg-white text-indigo-600 shadow-sm"
-                    : "text-slate-400 hover:text-slate-600",
+                    ? "bg-white text-[hsl(var(--primary))] shadow-sm"
+                    : "text-surface-400 hover:text-surface-600",
                 )}
               >
                 <LayoutGrid size={18} />
@@ -463,7 +463,7 @@ export function UsersPage() {
               <span>Export</span>
             </Button>
             <Button
-              className="bg-indigo-600 border-indigo-600 hover:bg-indigo-700"
+              className="bg-[hsl(var(--primary))] border-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.9)]"
               onClick={onAdd}
             >
               <Plus size={18} className="mr-1.5" /> Add User
@@ -534,12 +534,12 @@ export function UsersPage() {
                   className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group flex flex-col"
                 >
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="h-14 w-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                    <div className="h-14 w-14 rounded-2xl bg-surface-50 border border-surface-100 flex items-center justify-center text-surface-400 group-hover:bg-[hsl(var(--secondary))] group-hover:text-[hsl(var(--primary))] transition-colors">
                       <User size={28} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3
-                        className="font-bold text-slate-900 truncate hover:text-indigo-600 transition-colors cursor-pointer"
+                        className="font-bold text-surface-900 truncate hover:text-[hsl(var(--primary))] transition-colors cursor-pointer"
                         onClick={() => onEdit(r)}
                       >
                         {r.full_name}
@@ -550,11 +550,11 @@ export function UsersPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border bg-indigo-50 text-indigo-700 border-indigo-100 uppercase tracking-tight">
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-surface-50">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border bg-[hsl(var(--secondary))] text-[hsl(var(--primary))] border-[hsl(var(--border))] uppercase tracking-tight">
                       {r.role_name}
                     </span>
-                    <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
+                    <p className="text-[10px] text-surface-400 font-medium uppercase tracking-wider">
                       {formatDateMMDDYYYY(r.created_at)}
                     </p>
                   </div>
@@ -616,8 +616,8 @@ export function UsersPage() {
                 className={cn(
                   "h-10 px-4 rounded-xl border text-sm font-bold transition-all",
                   exportFormat === "csv"
-                    ? "bg-indigo-600 text-white border-indigo-600"
-                    : "bg-white border-slate-200 text-slate-700 hover:border-indigo-300",
+                    ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
+                    : "bg-white border-surface-200 text-surface-700 hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportFormat("csv")}
               >
@@ -628,8 +628,8 @@ export function UsersPage() {
                 className={cn(
                   "h-10 px-4 rounded-xl border text-sm font-bold transition-all",
                   exportFormat === "pdf"
-                    ? "bg-indigo-600 text-white border-indigo-600"
-                    : "bg-white border-slate-200 text-slate-700 hover:border-indigo-300",
+                    ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
+                    : "bg-white border-surface-200 text-surface-700 hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportFormat("pdf")}
               >
@@ -648,8 +648,8 @@ export function UsersPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "selected"
-                    ? "border-indigo-600 bg-indigo-50"
-                    : "border-slate-200 bg-white hover:border-indigo-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("selected")}
               >
@@ -663,8 +663,8 @@ export function UsersPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "page"
-                    ? "border-indigo-600 bg-indigo-50"
-                    : "border-slate-200 bg-white hover:border-indigo-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("page")}
               >
@@ -680,8 +680,8 @@ export function UsersPage() {
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3 transition-all",
                   exportScope === "all"
-                    ? "border-indigo-600 bg-indigo-50"
-                    : "border-slate-200 bg-white hover:border-indigo-300",
+                    ? "border-[hsl(var(--primary))] bg-[hsl(var(--secondary))]"
+                    : "border-surface-200 bg-white hover:border-[hsl(var(--primary)/0.3)]",
                 )}
                 onClick={() => setExportScope("all")}
               >

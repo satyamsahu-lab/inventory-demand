@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Upload, Download, FileText, AlertCircle, X, CheckCircle2 } from "lucide-react";
+import {
+  Upload,
+  Download,
+  FileText,
+  AlertCircle,
+  X,
+  CheckCircle2,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { Modal } from "./Modal";
 import { Button } from "./Button";
@@ -36,9 +43,9 @@ export function ImportModal({
 
   const handleDownloadSample = () => {
     const headerRow = sampleHeaders.join(",");
-    const dataRows = sampleRows.map(row => row.join(",")).join("\n");
+    const dataRows = sampleRows.map((row) => row.join(",")).join("\n");
     const csvContent = headerRow + "\n" + dataRows + (dataRows ? "\n" : "");
-    
+
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -89,8 +96,8 @@ export function ImportModal({
           <Button variant="ghost" onClick={onClose} disabled={uploading}>
             Cancel
           </Button>
-          <Button 
-            onClick={handleSubmit} 
+          <Button
+            onClick={handleSubmit}
             disabled={!file || uploading}
             className="px-8 shadow-brand-200"
           >
@@ -101,12 +108,12 @@ export function ImportModal({
     >
       <div className="space-y-6">
         {/* Upload Area */}
-        <div 
+        <div
           className={cn(
             "relative border-2 border-dashed rounded-2xl p-10 transition-all flex flex-col items-center justify-center gap-4 group cursor-pointer",
-            file 
-              ? "border-emerald-200 bg-emerald-50/30" 
-              : "border-surface-200 hover:border-brand-300 hover:bg-brand-50/20"
+            file
+              ? "border-emerald-200 bg-emerald-50/30"
+              : "border-surface-200 hover:border-[hsl(var(--primary)/0.3)] hover:bg-[hsl(var(--secondary)/0.2)]",
           )}
           onClick={() => document.getElementById("file-upload")?.click()}
         >
@@ -117,11 +124,15 @@ export function ImportModal({
             accept=".csv,.xlsx"
             onChange={handleFileChange}
           />
-          
-          <div className={cn(
-            "h-16 w-16 rounded-2xl flex items-center justify-center transition-all shadow-sm",
-            file ? "bg-emerald-100 text-emerald-600" : "bg-surface-100 text-surface-400 group-hover:bg-brand-100 group-hover:text-brand-500"
-          )}>
+
+          <div
+            className={cn(
+              "h-16 w-16 rounded-2xl flex items-center justify-center transition-all shadow-sm",
+              file
+                ? "bg-emerald-100 text-emerald-600"
+                : "bg-surface-100 text-surface-400 group-hover:bg-[hsl(var(--secondary))] group-hover:text-[hsl(var(--primary))]",
+            )}
+          >
             {file ? <CheckCircle2 size={32} /> : <Upload size={32} />}
           </div>
 
@@ -135,7 +146,7 @@ export function ImportModal({
           </div>
 
           {file && (
-            <button 
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 setFile(null);
@@ -150,14 +161,16 @@ export function ImportModal({
         {/* Instructions & Sample */}
         <div className="bg-surface-50 border border-surface-200 rounded-2xl p-5 space-y-4">
           <div className="flex items-start gap-3">
-            <div className="h-5 w-5 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <div className="h-5 w-5 rounded-full bg-[hsl(var(--secondary))] text-[hsl(var(--primary))] flex items-center justify-center flex-shrink-0 mt-0.5">
               <AlertCircle size={12} />
             </div>
             <div>
-              <p className="text-[11px] font-black text-surface-900 uppercase tracking-widest">Requirements</p>
+              <p className="text-[11px] font-black text-surface-900 uppercase tracking-widest">
+                Requirements
+              </p>
               <p className="text-xs text-surface-500 mt-1 leading-relaxed">
-                Your file must include the following columns: <br/>
-                <code className="bg-white border border-surface-200 px-1.5 py-0.5 rounded text-brand-600 font-mono text-[10px] font-bold mt-1 inline-block">
+                Your file must include the following columns: <br />
+                <code className="bg-white border border-surface-200 px-1.5 py-0.5 rounded text-[hsl(var(--primary))] font-mono text-[10px] font-bold mt-1 inline-block">
                   {sampleHeaders.join(", ")}
                 </code>
               </p>
@@ -165,7 +178,9 @@ export function ImportModal({
           </div>
 
           <div className="pt-2 border-t border-surface-100 flex items-center justify-between">
-            <p className="text-[10px] font-bold text-surface-400 italic">Need a template?</p>
+            <p className="text-[10px] font-bold text-surface-400 italic">
+              Need a template?
+            </p>
             <button
               onClick={handleDownloadSample}
               className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-black text-[11px] uppercase tracking-widest transition-colors"
